@@ -6,7 +6,6 @@ export default class ValidaCpf {
     ehValido(cpf: string) {
         const cpfClean = cpf.replace(/[^a-zA-Z0-9 ]/g, "");
         if (cpfClean.length != 11) return false;
-        // const cpfNumero = parseInt(cpfClean)
         const primeiroDigitoVerificador = this.calcularDigitoVerificador(cpf, 9)
         const segundoDigitoVerificador = this.calcularDigitoVerificador(cpf, 10)
         return (primeiroDigitoVerificador === cpf[9] && segundoDigitoVerificador === cpf[10]) ? true : false
