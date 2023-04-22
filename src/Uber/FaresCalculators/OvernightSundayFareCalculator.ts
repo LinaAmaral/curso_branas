@@ -1,5 +1,5 @@
-import FareCalculatorInterface from "./FareCalculatorInterface";
-import Segment from "./Segment";
+import FareCalculatorInterface from "../FareCalculatorInterface";
+import Segment from "../Segment";
 
 export default class OvernightSundayFareCalculator implements FareCalculatorInterface {
     FARE = 5;

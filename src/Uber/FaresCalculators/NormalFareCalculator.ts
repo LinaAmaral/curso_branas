@@ -1,5 +1,5 @@
-import FareCalculatorInterface from "./FareCalculatorInterface";
-import Segment from "./Segment";
+import FareCalculatorInterface from "../FareCalculatorInterface";
+import Segment from "../Segment";
 
 export default class NormalFareCalculator implements FareCalculatorInterface {
     FARE = 2.1;
