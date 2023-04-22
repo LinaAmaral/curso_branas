@@ -1,13 +1,16 @@
 import FareCalculatorHandler from "./FareCalculatorHandler";
 import Segment from "../Segment";
 
-export default class OvernightSundayFareCalculatorHandler implements FareCalculatorHandler {
+export default class OvernightSundayFareCalculatorHandler extends FareCalculatorHandler {
     FARE = 5;
-    constructor(readonly next?: FareCalculatorHandler) { }
+
+    getFare(): number {
+        return this.FARE;
+    }
 
     calculate(segment: Segment): number {
         if (segment.isOvernight() && segment.isSunday()) {
-            return segment.distance * this.FARE;
+            return this.calculateFare(segment);
         }
         if (!this.next) throw new Error("Erro of chain")
         return this.next.calculate(segment);
