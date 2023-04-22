@@ -1,4 +1,4 @@
-import Segment from "./Segment";
+import Segment from "../Segment";
 
 //é uma interface, um contrato
 //esse é ponto de extensão que estou buscando

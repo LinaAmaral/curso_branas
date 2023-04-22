@@ -1,11 +1,11 @@
 //uma fábrica simples
 
 import FareCalculatorInterface from "./FareCalculatorInterface";
-import NormalFareCalculator from "./FaresCalculators/NormalFareCalculator";
-import OvernightFareCalculator from "./FaresCalculators/OvernightFareCalculator";
-import OvernightSundayFareCalculator from "./FaresCalculators/OvernightSundayFareCalculator";
-import SundayFareCalculator from "./FaresCalculators/SundayFareCalculator";
-import Segment from "./Segment";
+import NormalFareCalculator from "./NormalFareCalculator";
+import OvernightFareCalculator from "./OvernightFareCalculator";
+import OvernightSundayFareCalculator from "./OvernightSundayFareCalculator";
+import SundayFareCalculator from "./SundayFareCalculator";
+import Segment from "../Segment";
 
 //ela tem o papel de criar instancias. Só retorno a classe
 //Simple Factory: Criar instancias com base em algum critério
