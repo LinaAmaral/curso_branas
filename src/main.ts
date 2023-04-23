@@ -28,10 +28,10 @@ app.post("/checkout", async function (req: Request, res: Response) {
                 }) : checkedItems.add(item.idProduct)
             }
 
-
-
             for (const item of req.body.items) {
                 const [productData] = await connection.query("select * from cccat11.product where id_product = $1", [item.idProduct]);
+                //test
+                if (!isValidDimension(productData)) { res.json({ message: "Invalid dimension" }) };
                 const price = parseFloat(productData.price);
                 output.total += price * item.quantity;
             }
@@ -50,4 +50,9 @@ app.post("/checkout", async function (req: Request, res: Response) {
             message: "Invalid cpf"
         });
     }
+
+    function isValidDimension(productData: any): boolean {
+        return (productData.width < 0 || productData.height < 0 || productData.length < 0) ? false : true;
+    }
 })
+

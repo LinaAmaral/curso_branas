@@ -77,4 +77,26 @@ test("Um mesmo item não pode ser informado mais de uma vez", async function () 
     const output = response.data;
     expect(output.message).toBe("Invalid list items");
 });
+test("Nenhuma dimensão do item deve ser inválida", async function () {
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 4, quantity: 1 },
+        ],
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.message).toBe("Invalid dimension");
+});
+test("As dimensões devem ser válidas", async function () {
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+        ],
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.total).toBe(1000);
+});
 
