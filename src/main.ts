@@ -13,11 +13,22 @@ app.post("/checkout", async function (req: Request, res: Response) {
         };
         if (req.body.items) {
 
+            //test
             req.body.items.map(function (item: any) {
                 if (item.quantity <= 0) res.json({
                     message: "Invalid quantity"
                 });
             })
+
+            //test
+            let checkedItems = new Set();
+            for (const item of req.body.items) {
+                checkedItems.has(item.idProduct) ? res.json({
+                    message: "Invalid list items"
+                }) : checkedItems.add(item.idProduct)
+            }
+
+
 
             for (const item of req.body.items) {
                 const [productData] = await connection.query("select * from cccat11.product where id_product = $1", [item.idProduct]);
@@ -27,7 +38,7 @@ app.post("/checkout", async function (req: Request, res: Response) {
         }
         if (req.body.coupon) {
             const [couponData] = await connection.query("select * from cccat11.coupon where code = $1", [req.body.coupon]);
-            console.log("Resultado:", couponData.expiration <= new Date())
+            //test
             if (couponData.expiration <= new Date()) res.json({
                 message: "Invalid coupon"
             });

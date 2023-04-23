@@ -64,4 +64,17 @@ test("Não deve aplicar um cupom de desconto expirado", async function () {
     const output = response.data;
     expect(output.message).toBe("Invalid coupon");
 });
+test("Um mesmo item não pode ser informado mais de uma vez", async function () {
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 1, quantity: 2 },
+        ],
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.message).toBe("Invalid list items");
+});
 
