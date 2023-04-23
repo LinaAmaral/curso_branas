@@ -110,5 +110,18 @@ test("O peso não deve ser inválido", async function () {
     const output = response.data;
     expect(output.message).toBe("Invalid weight");
 });
+test("Deve calcular o valor do frete de acordo com as dimensões AxLxC", async function () {
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 1 },
+        ],
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.freight).toBe(440);
+});
 
 

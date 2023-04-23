@@ -9,7 +9,8 @@ app.post("/checkout", async function (req: Request, res: Response) {
     if (validate(req.body.cpf)) {
         const connection = pgp()("postgres://postgres:12345@localhost:5433/app");
         const output = {
-            total: 0
+            total: 0,
+            freight: 0
         };
         if (req.body.items) {
 
@@ -35,6 +36,7 @@ app.post("/checkout", async function (req: Request, res: Response) {
                 if (!isValidWeight(productData)) { res.json({ message: "Invalid weight" }) };
                 const price = parseFloat(productData.price);
                 output.total += price * item.quantity;
+                output.freight += (calculateFreight(productData) * item.quantity);
             }
         }
         if (req.body.coupon) {
@@ -45,6 +47,8 @@ app.post("/checkout", async function (req: Request, res: Response) {
             });
             output.total -= (output.total * parseFloat(couponData.percentage)) / 100;
         }
+
+
         res.json(output);
     } else {
         res.json({
@@ -57,6 +61,13 @@ app.post("/checkout", async function (req: Request, res: Response) {
     }
     function isValidWeight(productData: any): boolean {
         return (productData.weight < 0) ? false : true;
+    }
+    function calculateFreight(productData: any): number {
+        const DISTANCE = 1000;
+        const volume = productData.width * productData.height * productData.length;
+        const density = productData.weight / volume;
+        const freight = (DISTANCE * volume * (density / 100))
+        return freight < 10 ? 10 : Math.trunc(freight);
     }
 })
 
