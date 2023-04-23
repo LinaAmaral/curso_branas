@@ -27,6 +27,10 @@ app.post("/checkout", async function (req: Request, res: Response) {
         }
         if (req.body.coupon) {
             const [couponData] = await connection.query("select * from cccat11.coupon where code = $1", [req.body.coupon]);
+            console.log("Resultado:", couponData.expiration <= new Date())
+            if (couponData.expiration <= new Date()) res.json({
+                message: "Invalid coupon"
+            });
             output.total -= (output.total * parseFloat(couponData.percentage)) / 100;
         }
         res.json(output);
