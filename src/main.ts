@@ -32,6 +32,7 @@ app.post("/checkout", async function (req: Request, res: Response) {
                 const [productData] = await connection.query("select * from cccat11.product where id_product = $1", [item.idProduct]);
                 //test
                 if (!isValidDimension(productData)) { res.json({ message: "Invalid dimension" }) };
+                if (!isValidWeight(productData)) { res.json({ message: "Invalid weight" }) };
                 const price = parseFloat(productData.price);
                 output.total += price * item.quantity;
             }
@@ -53,6 +54,9 @@ app.post("/checkout", async function (req: Request, res: Response) {
 
     function isValidDimension(productData: any): boolean {
         return (productData.width < 0 || productData.height < 0 || productData.length < 0) ? false : true;
+    }
+    function isValidWeight(productData: any): boolean {
+        return (productData.weight < 0) ? false : true;
     }
 })
 
