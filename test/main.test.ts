@@ -4,22 +4,6 @@ import Pedido from "../src/Pedido";
 import Produto from "../src/Produto";
 import { validate } from "../src/Validate";
 
-// const ITENS_DO_PEDIDO = [{
-//     produto: new Produto("arroz", 10),
-//     quantidade: 1
-// },
-// {
-//     produto: new Produto("feijao", 5),
-//     quantidade: 2
-// },
-// {
-//     produto: new Produto("farinha", 20),
-//     quantidade: 1
-// },
-// ]
-
-// const CPF_VALIDO = ["09397879626", "20129841005", "025.787.610-35"];
-// const CPF_INVALIDO = ["09397879625", "111.111.111-11", "", "0939785479865", "093.978"];
 
 test("Não deve criar pedido com cpf inválido", async function () {
     const input = {

@@ -12,6 +12,13 @@ app.post("/checkout", async function (req: Request, res: Response) {
             total: 0
         };
         if (req.body.items) {
+
+            req.body.items.map(function (item: any) {
+                if (item.quantity <= 0) res.json({
+                    message: "Invalid quantity"
+                });
+            })
+
             for (const item of req.body.items) {
                 const [productData] = await connection.query("select * from cccat11.product where id_product = $1", [item.idProduct]);
                 const price = parseFloat(productData.price);
