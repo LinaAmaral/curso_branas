@@ -1,16 +1,94 @@
 import axios from "axios";
+import Checkout from "../src/Checkout";
+
 
 axios.defaults.validateStatus = function () {
     return true;
 }
 
+let checkout: Checkout;
+
+beforeEach(() => {
+    const products: any = {
+        1: {
+            idProduct: 1,
+            description: "A",
+            price: 1000,
+            width: 100,
+            height: 30,
+            length: 10,
+            weight: 3
+        },
+        2: {
+            idProduct: 2,
+            description: "B",
+            price: 5000,
+            width: 50,
+            height: 50,
+            length: 50,
+            weight: 22
+        },
+        3: {
+            idProduct: 3,
+            description: "C",
+            price: 30,
+            width: 10,
+            height: 10,
+            length: 10,
+            weight: 0.9
+        },
+        4: {
+            idProduct: 4,
+            description: "D",
+            price: 1000,
+            width: -100,
+            height: 30,
+            length: 10,
+            weight: 3
+        },
+        5: {
+            idProduct: 5,
+            description: "E",
+            price: 1000,
+            width: 100,
+            height: 30,
+            length: 10,
+            weight: -3
+        }
+    }
+    // const productRepository: ProductRepository = {
+    // 	async get (idProduct: number): Promise<any> {
+    // 		return products[idProduct];
+    // 	}
+    // };
+    // const coupons: any = {
+    // 	"VALE20": {
+    // 		percentage: 20,
+    // 		expire_date: new Date("2023-10-01T10:00:00")
+    // 	},
+    // 	"VALE10": {
+    // 		percentage: 10,
+    // 		expire_date: new Date("2022-10-01T10:00:00")
+    // 	}
+    // }
+    // const couponRepository: CouponRepository = {
+    // 	async get (code: string): Promise<any> {
+    // 		return coupons[code];
+    // 	}
+    // };
+    // checkout = new Checkout(productRepository, couponRepository);
+    checkout = new Checkout();
+});
+
+//eu trago os testes da main pra cá, agora vou testar só a regra de negócio (Checkout), então minha api não precisar estar rodando.
+//Ajusto o expect 
+//quando faço isso eu desacoplo do driver (main)
 test("Não deve criar pedido com cpf inválido", async function () {
     const input = {
-        cpf: "406.302.170-27"
+        cpf: "406.302.170-27",
+        items: []
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(output.message).toBe("Invalid cpf");
+    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid cpf"));
 });
 
 test("Deve fazer um pedido com 3 itens", async function () {
@@ -20,10 +98,10 @@ test("Deve fazer um pedido com 3 itens", async function () {
             { idProduct: 1, quantity: 1 },
             { idProduct: 2, quantity: 1 },
             { idProduct: 3, quantity: 3 }
-        ]
+        ],
+        email: "john.doe@gmail.com"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.total).toBe(6090);
 });
 
@@ -37,8 +115,7 @@ test("Deve fazer um pedido com 3 itens com cupom de desconto válido", async fun
         ],
         coupon: "VALE20"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.total).toBe(4872);
 });
 
@@ -52,8 +129,7 @@ test("Deve fazer um pedido com 3 itens com cupom de desconto expirado", async fu
         ],
         coupon: "VALE10"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.total).toBe(6090);
 });
 
@@ -67,8 +143,7 @@ test("Deve fazer um pedido com 3 itens com cupom de desconto que não existe", a
         ],
         coupon: "VALE0"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.total).toBe(6090);
 });
 
@@ -79,10 +154,7 @@ test("Não deve fazer um pedido com quantidade negativa de item", async function
             { idProduct: 1, quantity: -1 }
         ]
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(response.status).toBe(422);
-    expect(output.message).toBe("Invalid quantity");
+    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid quantity"));
 });
 
 test("Não deve fazer um pedido com item duplicado", async function () {
@@ -93,10 +165,7 @@ test("Não deve fazer um pedido com item duplicado", async function () {
             { idProduct: 1, quantity: 1 }
         ]
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(response.status).toBe(422);
-    expect(output.message).toBe("Duplicated item");
+    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Duplicated item"));
 });
 
 test("Deve fazer um pedido com 3 itens calculando o frete", async function () {
@@ -109,8 +178,7 @@ test("Deve fazer um pedido com 3 itens calculando o frete", async function () {
         from: "88015600",
         to: "22030060"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.subtotal).toBe(6000);
     expect(output.freight).toBe(250);
     expect(output.total).toBe(6250);
@@ -127,8 +195,7 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
         from: "88015600",
         to: "22030060"
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
+    const output = await checkout.execute(input);
     expect(output.subtotal).toBe(6090);
     expect(output.freight).toBe(280);
     expect(output.total).toBe(6370);
@@ -141,10 +208,7 @@ test("Não deve fazer um pedido se o produto tiver dimensões inválidas", async
             { idProduct: 4, quantity: 1 }
         ]
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(response.status).toBe(422);
-    expect(output.message).toBe("Invalid dimensions");
+    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid dimensions"));
 });
 
 test("Não deve fazer um pedido se o produto tiver peso negativo", async function () {
@@ -154,8 +218,6 @@ test("Não deve fazer um pedido se o produto tiver peso negativo", async functio
             { idProduct: 5, quantity: 1 }
         ]
     };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(response.status).toBe(422);
-    expect(output.message).toBe("Invalid weight");
+    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid weight"));
 });
+
