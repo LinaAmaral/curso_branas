@@ -1,6 +1,9 @@
 import axios from "axios";
 import Checkout from "../src/Checkout";
+import ProductRepository from "../src/ProductRepository";
+import CouponRepository from "../src/CouponRepository";
 
+//isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
 axios.defaults.validateStatus = function () {
     return true;
@@ -56,28 +59,28 @@ beforeEach(() => {
             weight: -3
         }
     }
-    // const productRepository: ProductRepository = {
-    // 	async get (idProduct: number): Promise<any> {
-    // 		return products[idProduct];
-    // 	}
-    // };
-    // const coupons: any = {
-    // 	"VALE20": {
-    // 		percentage: 20,
-    // 		expire_date: new Date("2023-10-01T10:00:00")
-    // 	},
-    // 	"VALE10": {
-    // 		percentage: 10,
-    // 		expire_date: new Date("2022-10-01T10:00:00")
-    // 	}
-    // }
-    // const couponRepository: CouponRepository = {
-    // 	async get (code: string): Promise<any> {
-    // 		return coupons[code];
-    // 	}
-    // };
-    // checkout = new Checkout(productRepository, couponRepository);
-    checkout = new Checkout();
+    const productRepository: ProductRepository = {
+        async get(idProduct: number): Promise<any> {
+            return products[idProduct];
+        }
+    };
+    const coupons: any = {
+        "VALE20": {
+            percentage: 20,
+            expire_date: new Date("2023-10-01T10:00:00")
+        },
+        "VALE10": {
+            percentage: 10,
+            expire_date: new Date("2022-10-01T10:00:00")
+        }
+    }
+    //ou eu passo uma versão que acessa o banco ou eu passo uma versão que retorna algo parecido com o que vem do banco
+    const couponRepository: CouponRepository = {
+        async get(code: string): Promise<any> {
+            return coupons[code];
+        }
+    };
+    checkout = new Checkout(productRepository, couponRepository);
 });
 
 //eu trago os testes da main pra cá, agora vou testar só a regra de negócio (Checkout), então minha api não precisar estar rodando.
@@ -221,3 +224,62 @@ test("Não deve fazer um pedido se o produto tiver peso negativo", async functio
     expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid weight"));
 });
 
+// test("Deve fazer um pedido com 1 item com stub", async function () {
+//     const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves({
+//         idProduct: 1, description: "A", price: 100
+//     });
+//     checkout = new Checkout();
+//     const input = {
+//         cpf: "407.302.170-27",
+//         items: [
+//             { idProduct: 1, quantity: 1 }
+//         ]
+//     };
+//     const output = await checkout.execute(input);
+//     expect(output.total).toBe(100);
+//     productRepositoryStub.restore();
+// });
+
+// test("Deve verificar se o email foi enviado usando um spy", async function () {
+// 	const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves({
+// 		idProduct: 1, description: "A", price: 100
+// 	});
+// 	const emailGatewaySpy = sinon.spy(EmailGatewayConsole.prototype, "send");
+// 	checkout = new Checkout();
+// 	const input = {
+// 		cpf: "407.302.170-27",
+// 		items: [
+// 			{ idProduct: 1, quantity: 1 }
+// 		],
+// 		email: "john.doe@gmail.com"
+// 	};
+// 	const output = await checkout.execute(input);
+// 	expect(output.total).toBe(100);
+// 	expect(emailGatewaySpy.calledOnce).toBe(true);
+// 	expect(emailGatewaySpy.calledWith("Purchase Success", "...", "john.doe@gmail.com", "rodrigo@branas.io")).toBe(true);
+// 	productRepositoryStub.restore();
+// 	emailGatewaySpy.restore();
+// });
+
+// test("Deve verificar se o email foi enviado usando um mock", async function () {
+// 	const productRepositoryMock = sinon.mock(ProductRepositoryDatabase.prototype);
+// 	productRepositoryMock.expects("get").once().resolves({
+// 		idProduct: 1, description: "A", price: 100
+// 	});
+// 	const couponRepositorySpy = sinon.spy(CouponRepositoryDatabase.prototype, "get");
+// 	checkout = new Checkout();
+// 	const input = {
+// 		cpf: "407.302.170-27",
+// 		items: [
+// 			{ idProduct: 1, quantity: 1 }
+// 		],
+// 		coupon: "VALE20"
+// 	};
+// 	const output = await checkout.execute(input);
+// 	expect(output.total).toBe(80);
+// 	productRepositoryMock.verify();
+// 	expect(couponRepositorySpy.calledOnce).toBe(true);
+// 	expect(couponRepositorySpy.calledWith("VALE20")).toBe(true);
+// 	couponRepositorySpy.restore();
+// 	productRepositoryMock.restore();
+// });
