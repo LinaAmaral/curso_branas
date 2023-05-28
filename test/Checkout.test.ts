@@ -2,6 +2,9 @@ import axios from "axios";
 import Checkout from "../src/Checkout";
 import ProductRepository from "../src/ProductRepository";
 import CouponRepository from "../src/CouponRepository";
+import GetOrder from "../src/GetOrder";
+import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
+import crypto from "crypto"
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
@@ -10,6 +13,7 @@ axios.defaults.validateStatus = function () {
 }
 
 let checkout: Checkout;
+let getOrder: GetOrder;
 
 beforeEach(() => {
     const products: any = {
@@ -81,6 +85,8 @@ beforeEach(() => {
         }
     };
     checkout = new Checkout(productRepository, couponRepository);
+    const orderRepository = new OrderRepositoryDatabase();
+    getOrder = new GetOrder(orderRepository);
 });
 
 //eu trago os testes da main pra cá, agora vou testar só a regra de negócio (Checkout), então minha api não precisar estar rodando.
@@ -94,8 +100,10 @@ test("Não deve criar pedido com cpf inválido", async function () {
     expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid cpf"));
 });
 
-test("Deve fazer um pedido com 3 itens", async function () {
+test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function () {
+    const idOrder = crypto.randomUUID()
     const input = {
+        idOrder: idOrder,
         cpf: "407.302.170-27",
         items: [
             { idProduct: 1, quantity: 1 },
@@ -104,7 +112,8 @@ test("Deve fazer um pedido com 3 itens", async function () {
         ],
         email: "john.doe@gmail.com"
     };
-    const output = await checkout.execute(input);
+    await checkout.execute(input);
+    const output = await getOrder.execute(idOrder);
     expect(output.total).toBe(6090);
 });
 

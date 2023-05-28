@@ -1,11 +1,10 @@
 import CouponRepository from "./CouponRepository";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
-import EmailGateway from "./EmailGateway";
-import EmailGatewayConsole from "./EmailGatewayConsole";
+import OrderRepository from "./OrderRepository";
+import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
 import { validate } from "./Validate";
-import pgp from 'pg-promise';
 
 
 //camada de aplicação (regras de negócio, aquilo que é reusável) Aqui eu exponho o comportamento
@@ -17,6 +16,7 @@ export default class Checkout {
         // readonly productRepository: ProductRepository, ou eu passo assim ou deixo igual a linha de baixo que seria um new do banco como default
         readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
         readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
+        readonly orderRepository: OrderRepository = new OrderRepositoryDatabase(),
     ) {
     }
 
@@ -54,7 +54,14 @@ export default class Checkout {
                 }
             }
             output.total += output.freight;
-
+            const order = {
+                idOrder: input.idOrder,
+                cpf: input.cpf,
+                total: output.total,
+                freight: output.freight,
+                items: input.items
+            }
+            await this.orderRepository.save(order);
             return output;
         } else {
             throw new Error("Invalid cpf");
@@ -63,6 +70,7 @@ export default class Checkout {
 }
 
 type Input = {
+    idOrder?: string,
     cpf: string,
     email?: string,
     items: { idProduct: number, quantity: number }[],
