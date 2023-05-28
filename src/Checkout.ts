@@ -6,6 +6,7 @@ import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
 import RealClock from "./RealClock";
+import SimulateFreight from "./SimulateFreight";
 import { validate } from "./Validate";
 
 
@@ -39,15 +40,11 @@ export default class Checkout {
                     if (productData.weight <= 0) throw new Error("Invalid weight");
                     const price = parseFloat(productData.price);
                     output.subtotal += price * item.quantity;
-                    if (input.from && input.to) {
-                        const volume = productData.width / 100 * productData.height / 100 * productData.length / 100;
-                        const density = parseFloat(productData.weight) / volume;
-                        let freight = volume * 1000 * (density / 100);
-                        freight = Math.max(10, freight);
-                        output.freight += freight * item.quantity;
-                    }
                 }
             }
+            const simulateFreight = new SimulateFreight(this.productRepository);
+            const freightOutput = await simulateFreight.execute(input);
+            output.freight = freightOutput.freight;
             output.total = output.subtotal;
             const today = input.date || new Date();
             if (input.coupon) {
