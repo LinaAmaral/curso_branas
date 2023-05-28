@@ -17,7 +17,7 @@ let checkout: Checkout;
 let getOrder: GetOrder;
 let orderRepository: OrderRepositoryDatabase;
 let productRepository: ProductRepository;
-let cuponRepository: CouponRepository;
+let couponRepository: CouponRepository;
 
 
 beforeEach(() => {
@@ -84,7 +84,7 @@ beforeEach(() => {
         }
     }
     //ou eu passo uma versão que acessa o banco ou eu passo uma versão que retorna algo parecido com o que vem do banco
-    const couponRepository: CouponRepository = {
+    couponRepository = {
         async get(code: string): Promise<any> {
             return coupons[code];
         }
@@ -121,16 +121,18 @@ test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function (
     const output = await getOrder.execute(idOrder);
     expect(output.total).toBe(6090);
 });
+
+//dessa forma eu passo essa data para o código e monto o code com ela, assim mesmo teste não não quebrar ao virar o ano
+// é muito agressiva essa abordagem, melhor passar como parametro
+// const clock: Clock = {
+//     getDate(): Date {
+//         return new Date("2023-01-01T10:00:00")
+//     }
+// }
+// checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
 test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
-    await orderRepository.clean()
-    //dessa forma eu passo essa data para o código e monto o code com ela, assim mesmo teste não não quebrar ao virar o ano
-    // é muito agressiva essa abordagem, melhor passar como parametro
-    // const clock: Clock = {
-    //     getDate(): Date {
-    //         return new Date("2023-01-01T10:00:00")
-    //     }
-    // }
-    // checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
+    await orderRepository.clear()
+    checkout = new Checkout(productRepository, couponRepository, orderRepository);
     await checkout.execute({
         idOrder: crypto.randomUUID(),
         cpf: "407.302.170-27",
@@ -139,7 +141,8 @@ test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async funct
             { idProduct: 2, quantity: 1 },
             { idProduct: 3, quantity: 3 }
         ],
-        email: "john.doe@gmail.com"
+        email: "john.doe@gmail.com",
+        date: new Date("2023-01-01T10:00:00")
     });
     const idOrder = crypto.randomUUID()
     const input = {
