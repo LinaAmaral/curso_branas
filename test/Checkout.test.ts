@@ -5,7 +5,7 @@ import CouponRepository from "../src/CouponRepository";
 import GetOrder from "../src/GetOrder";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import crypto from "crypto"
-import OrderRepository from "../src/OrderRepository";
+import Clock from "../src/Clock";
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
@@ -16,6 +16,9 @@ axios.defaults.validateStatus = function () {
 let checkout: Checkout;
 let getOrder: GetOrder;
 let orderRepository: OrderRepositoryDatabase;
+let productRepository: ProductRepository;
+let cuponRepository: CouponRepository;
+
 
 beforeEach(() => {
     const products: any = {
@@ -65,7 +68,7 @@ beforeEach(() => {
             weight: -3
         }
     }
-    const productRepository: ProductRepository = {
+    productRepository = {
         async get(idProduct: number): Promise<any> {
             return products[idProduct];
         }
@@ -118,8 +121,15 @@ test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function (
     const output = await getOrder.execute(idOrder);
     expect(output.total).toBe(6090);
 });
-test.only("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
+test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
     await orderRepository.clean()
+    //dessa forma eu passo essa data para o código e monto o code com ela, assim mesmo teste não não quebrar ao virar o ano
+    const clock: Clock = {
+        getDate(): Date {
+            return new Date("2023-01-01T10:00:00")
+        }
+    }
+    checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
     await checkout.execute({
         idOrder: crypto.randomUUID(),
         cpf: "407.302.170-27",
@@ -139,7 +149,7 @@ test.only("Deve fazer um pedido com 3 itens e gerar o código do pedido", async 
             { idProduct: 2, quantity: 1 },
             { idProduct: 3, quantity: 3 }
         ],
-        email: "john.doe@gmail.com"
+        email: "john.doe@gmail.com",
     };
     await checkout.execute(input);
     const output = await getOrder.execute(idOrder);

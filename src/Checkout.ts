@@ -1,9 +1,11 @@
+import Clock from "./Clock";
 import CouponRepository from "./CouponRepository";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
 import OrderRepository from "./OrderRepository";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
+import RealClock from "./RealClock";
 import { validate } from "./Validate";
 
 
@@ -17,6 +19,7 @@ export default class Checkout {
         readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
         readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
         readonly orderRepository: OrderRepository = new OrderRepositoryDatabase(),
+        readonly clock: Clock = new RealClock(),
     ) {
     }
 
@@ -46,7 +49,7 @@ export default class Checkout {
                 }
             }
             output.total = output.subtotal;
-            const today = new Date();
+            const today = this.clock.getDate();
             if (input.coupon) {
                 const couponData = await this.couponRepository.get(input.coupon);
                 if (couponData && couponData.expire_date.getTime() >= today.getTime()) {
