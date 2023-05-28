@@ -19,7 +19,7 @@ export default class Checkout {
         readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
         readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
         readonly orderRepository: OrderRepository = new OrderRepositoryDatabase(),
-        readonly clock: Clock = new RealClock(),
+        // readonly clock: Clock = new RealClock(), é um pouco de mais fazer esse caminho, passarial como parametro
     ) {
     }
 
@@ -49,7 +49,7 @@ export default class Checkout {
                 }
             }
             output.total = output.subtotal;
-            const today = this.clock.getDate();
+            const today = input.date || new Date();
             if (input.coupon) {
                 const couponData = await this.couponRepository.get(input.coupon);
                 if (couponData && couponData.expire_date.getTime() >= today.getTime()) {
@@ -78,6 +78,7 @@ export default class Checkout {
 
 type Input = {
     idOrder?: string,
+    date?: Date,
     cpf: string,
     email?: string,
     items: { idProduct: number, quantity: number }[],

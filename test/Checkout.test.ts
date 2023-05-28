@@ -124,12 +124,13 @@ test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function (
 test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
     await orderRepository.clean()
     //dessa forma eu passo essa data para o código e monto o code com ela, assim mesmo teste não não quebrar ao virar o ano
-    const clock: Clock = {
-        getDate(): Date {
-            return new Date("2023-01-01T10:00:00")
-        }
-    }
-    checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
+    // é muito agressiva essa abordagem, melhor passar como parametro
+    // const clock: Clock = {
+    //     getDate(): Date {
+    //         return new Date("2023-01-01T10:00:00")
+    //     }
+    // }
+    // checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
     await checkout.execute({
         idOrder: crypto.randomUUID(),
         cpf: "407.302.170-27",
@@ -150,6 +151,7 @@ test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async funct
             { idProduct: 3, quantity: 3 }
         ],
         email: "john.doe@gmail.com",
+        date: new Date("2023-01-01T10:00:00")
     };
     await checkout.execute(input);
     const output = await getOrder.execute(idOrder);
