@@ -17,7 +17,6 @@ export default class Checkout {
         // readonly productRepository: ProductRepository, ou eu passo assim ou deixo igual a linha de baixo que seria um new do banco como default
         readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
         readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
-        readonly emailGateway: EmailGateway = new EmailGatewayConsole()
     ) {
     }
 
@@ -55,9 +54,7 @@ export default class Checkout {
                 }
             }
             output.total += output.freight;
-            if (input.email) {
-                await this.emailGateway.send("Purchase Success", "...", input.email, "rodrigo@branas.io");
-            }
+
             return output;
         } else {
             throw new Error("Invalid cpf");
