@@ -46,16 +46,20 @@ export default class Checkout {
                 }
             }
             output.total = output.subtotal;
+            const today = new Date();
             if (input.coupon) {
                 const couponData = await this.couponRepository.get(input.coupon);
-                const today = new Date();
                 if (couponData && couponData.expire_date.getTime() >= today.getTime()) {
                     output.total -= (output.total * parseFloat(couponData.percentage)) / 100;
                 }
             }
             output.total += output.freight;
+            let sequence = await this.orderRepository.count();
+            sequence++;
+            const code = `${today.getFullYear()}${new String(sequence).padStart(8, "0")}`
             const order = {
                 idOrder: input.idOrder,
+                code,
                 cpf: input.cpf,
                 total: output.total,
                 freight: output.freight,

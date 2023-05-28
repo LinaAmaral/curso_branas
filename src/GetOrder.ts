@@ -13,5 +13,6 @@ export default class GetOrder {
 }
 
 type Output = {
+    code: string
     total: number
 }

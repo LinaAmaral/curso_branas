@@ -17,4 +17,19 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         await connection.$pool.end();
     }
 
+    async clean(): Promise<void> {
+        const connection = pgp()("postgres://postgres:12345@localhost:5433/app");
+        await connection.query("delete from cccat11.order", []);
+        await connection.$pool.end();
+    }
+
+    async count(): Promise<number> {
+        const connection = pgp()("postgres://postgres:12345@localhost:5433/app");
+        const [data] = await connection.query("select count(*)::integer from cccat11.order");
+        await connection.$pool.end();
+        return data.count
+    }
+
+
+
 }

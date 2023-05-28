@@ -5,6 +5,7 @@ import CouponRepository from "../src/CouponRepository";
 import GetOrder from "../src/GetOrder";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import crypto from "crypto"
+import OrderRepository from "../src/OrderRepository";
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
@@ -14,6 +15,7 @@ axios.defaults.validateStatus = function () {
 
 let checkout: Checkout;
 let getOrder: GetOrder;
+let orderRepository: OrderRepositoryDatabase;
 
 beforeEach(() => {
     const products: any = {
@@ -85,7 +87,7 @@ beforeEach(() => {
         }
     };
     checkout = new Checkout(productRepository, couponRepository);
-    const orderRepository = new OrderRepositoryDatabase();
+    orderRepository = new OrderRepositoryDatabase();
     getOrder = new GetOrder(orderRepository);
 });
 
@@ -115,6 +117,33 @@ test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function (
     await checkout.execute(input);
     const output = await getOrder.execute(idOrder);
     expect(output.total).toBe(6090);
+});
+test.only("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
+    await orderRepository.clean()
+    await checkout.execute({
+        idOrder: crypto.randomUUID(),
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
+        ],
+        email: "john.doe@gmail.com"
+    });
+    const idOrder = crypto.randomUUID()
+    const input = {
+        idOrder: idOrder,
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
+        ],
+        email: "john.doe@gmail.com"
+    };
+    await checkout.execute(input);
+    const output = await getOrder.execute(idOrder);
+    expect(output.code).toBe("202300000002");
 });
 
 test("Deve fazer um pedido com 3 itens com cupom de desconto válido", async function () {
