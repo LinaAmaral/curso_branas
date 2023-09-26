@@ -22,5 +22,6 @@ export default class Ride {
     }
 }
 
-//Agora o meu Ride não sabe mais quais são as possibilidades de cálculo de tarifa. Ela delegou essa responsabilidade para uma fabrica,
+//Agora o meu Ride não sabe mais quais são as possibilidades de cálculo de tarifa.
+// Ela delegou essa responsabilidade para uma fabrica,
 //FareCalculatorHandler: Uma espécie de arranjo de handlers

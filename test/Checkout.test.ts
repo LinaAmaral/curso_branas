@@ -6,6 +6,11 @@ import GetOrder from "../src/GetOrder";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import crypto from "crypto"
 import Clock from "../src/Clock";
+import ProductRepositoryDatabase from "../src/ProductRepositoryDataBase";
+import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
+import Product from "../src/Product";
+import sinon from "sinon";
+import EmailGatewayConsole from "../src/EmailGatewayConsole";
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
@@ -22,54 +27,14 @@ let couponRepository: CouponRepository;
 
 beforeEach(() => {
     const products: any = {
-        1: {
-            idProduct: 1,
-            description: "A",
-            price: 1000,
-            width: 100,
-            height: 30,
-            length: 10,
-            weight: 3
-        },
-        2: {
-            idProduct: 2,
-            description: "B",
-            price: 5000,
-            width: 50,
-            height: 50,
-            length: 50,
-            weight: 22
-        },
-        3: {
-            idProduct: 3,
-            description: "C",
-            price: 30,
-            width: 10,
-            height: 10,
-            length: 10,
-            weight: 0.9
-        },
-        4: {
-            idProduct: 4,
-            description: "D",
-            price: 1000,
-            width: -100,
-            height: 30,
-            length: 10,
-            weight: 3
-        },
-        5: {
-            idProduct: 5,
-            description: "E",
-            price: 1000,
-            width: 100,
-            height: 30,
-            length: 10,
-            weight: -3
-        }
+        1: new Product(1, "A", 1000, 100, 30, 10, 3),
+        2: new Product(2, "B", 5000, 50, 50, 50, 22),
+        3: new Product(3, "C", 30, 10, 10, 10, 0.9),
+        4: new Product(4, "D", 1000, -100, 30, 10, 3),
+        5: new Product(5, "E", 1000, 100, 30, 10, -3),
     }
     productRepository = {
-        async get(idProduct: number): Promise<any> {
+        async get(idProduct: number): Promise<Product> {
             return products[idProduct];
         }
     };
@@ -277,62 +242,62 @@ test("Não deve fazer um pedido se o produto tiver peso negativo", async functio
     expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid weight"));
 });
 
-// test("Deve fazer um pedido com 1 item com stub", async function () {
-//     const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves({
-//         idProduct: 1, description: "A", price: 100
-//     });
+
+//exemplo e teste com test patters -aula 3 último vídeo
+
+test("Deve fazer um pedido com 1 item - ex. stub", async function () {
+    const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves(new Product(1, "A", 100, 1, 1, 1, 1));
+    checkout = new Checkout();
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 }
+        ]
+    };
+    const output = await checkout.execute(input);
+    expect(output.total).toBe(100);
+    productRepositoryStub.restore(); //volto ao estado original para não afetar outros testes
+});
+
+// test("Deve verificar se o email foi enviado usando um spy", async function () {
+//     const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves(
+//         new Product(1, 'A', 100, 1, 1, 1, 1));
+//     const emailGatewaySpy = sinon.spy(EmailGatewayConsole.prototype, "send");
 //     checkout = new Checkout();
 //     const input = {
 //         cpf: "407.302.170-27",
 //         items: [
 //             { idProduct: 1, quantity: 1 }
-//         ]
+//         ],
+//         email: "john.doe@gmail.com"
 //     };
 //     const output = await checkout.execute(input);
 //     expect(output.total).toBe(100);
+//     expect(emailGatewaySpy.calledOnce).toBe(true);
+//     expect(emailGatewaySpy.calledWith("Purchase Success", "...", "john.doe@gmail.com", "lina@amaral@gmail")).toBe(true);
 //     productRepositoryStub.restore();
+//     emailGatewaySpy.restore();
 // });
 
-// test("Deve verificar se o email foi enviado usando um spy", async function () {
-// 	const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves({
-// 		idProduct: 1, description: "A", price: 100
-// 	});
-// 	const emailGatewaySpy = sinon.spy(EmailGatewayConsole.prototype, "send");
-// 	checkout = new Checkout();
-// 	const input = {
-// 		cpf: "407.302.170-27",
-// 		items: [
-// 			{ idProduct: 1, quantity: 1 }
-// 		],
-// 		email: "john.doe@gmail.com"
-// 	};
-// 	const output = await checkout.execute(input);
-// 	expect(output.total).toBe(100);
-// 	expect(emailGatewaySpy.calledOnce).toBe(true);
-// 	expect(emailGatewaySpy.calledWith("Purchase Success", "...", "john.doe@gmail.com", "rodrigo@branas.io")).toBe(true);
-// 	productRepositoryStub.restore();
-// 	emailGatewaySpy.restore();
-// });
-
-// test("Deve verificar se o email foi enviado usando um mock", async function () {
-// 	const productRepositoryMock = sinon.mock(ProductRepositoryDatabase.prototype);
-// 	productRepositoryMock.expects("get").once().resolves({
-// 		idProduct: 1, description: "A", price: 100
-// 	});
-// 	const couponRepositorySpy = sinon.spy(CouponRepositoryDatabase.prototype, "get");
-// 	checkout = new Checkout();
-// 	const input = {
-// 		cpf: "407.302.170-27",
-// 		items: [
-// 			{ idProduct: 1, quantity: 1 }
-// 		],
-// 		coupon: "VALE20"
-// 	};
-// 	const output = await checkout.execute(input);
-// 	expect(output.total).toBe(80);
-// 	productRepositoryMock.verify();
-// 	expect(couponRepositorySpy.calledOnce).toBe(true);
-// 	expect(couponRepositorySpy.calledWith("VALE20")).toBe(true);
-// 	couponRepositorySpy.restore();
-// 	productRepositoryMock.restore();
-// });
+test("Deve verificar se o email foi enviado usando um mock", async function () {
+    const productRepositoryMock = sinon.mock(ProductRepositoryDatabase.prototype);
+    productRepositoryMock.expects("get").once().resolves(
+        new Product(1, "A", 100, 1, 1, 1, 1)
+    );
+    const couponRepositorySpy = sinon.spy(CouponRepositoryDatabase.prototype, "get");
+    checkout = new Checkout();
+    const input = {
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 }
+        ],
+        coupon: "VALE20"
+    };
+    const output = await checkout.execute(input);
+    expect(output.total).toBe(80);
+    productRepositoryMock.verify();
+    expect(couponRepositorySpy.calledOnce).toBe(true);
+    expect(couponRepositorySpy.calledWith("VALE20")).toBe(true);
+    couponRepositorySpy.restore();
+    productRepositoryMock.restore();
+});

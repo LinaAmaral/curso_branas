@@ -15,6 +15,8 @@ app.post("/checkout", async function (req: Request, res: Response) {
 });
 app.listen(3000);
 
+//Aqui temos uma Boundary: permite a interação do usuário com o sistema
+
 //cada um dos drives conhece Checkout
 //aqui eu faria esse pra rest, um pra fila e um pra CLI, todos esses drivers enxergando a camada de aplicação que é o Checkout
 

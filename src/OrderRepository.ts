@@ -4,3 +4,5 @@ export default interface OrderRepository {
     clear(): Promise<void>;
     count(): Promise<number>;
 }
+
+//Aqui tb temos um Boundary

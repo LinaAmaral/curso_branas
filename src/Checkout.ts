@@ -1,6 +1,7 @@
 import Clock from "./Clock";
 import CouponRepository from "./CouponRepository";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
+import FreightCalculator from "./FreightCalculator";
 import OrderRepository from "./OrderRepository";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
@@ -9,6 +10,7 @@ import RealClock from "./RealClock";
 import SimulateFreight from "./SimulateFreight";
 import { validate } from "./Validate";
 
+//Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
 
 //camada de aplicação (regras de negócio, aquilo que é reusável) Aqui eu exponho o comportamento
 //sempre que eu dou um new eu perco a oportunidade de controlar a dependencia. Então se eu der um new ProductRepositoryDataBase() para acessar o banco na lina 23 eu vou precisar acessar um banco para testar mesmo teste.
@@ -35,16 +37,16 @@ export default class Checkout {
                 for (const item of input.items) {
                     if (item.quantity <= 0) throw new Error("Invalid quantity");
                     if (input.items.filter((i: any) => i.idProduct === item.idProduct).length > 1) throw new Error("Duplicated item");
-                    const productData = await this.productRepository.get(item.idProduct);
-                    if (productData.width <= 0 || productData.height <= 0 || productData.length <= 0) throw new Error("Invalid dimensions");
-                    if (productData.weight <= 0) throw new Error("Invalid weight");
-                    const price = parseFloat(productData.price);
-                    output.subtotal += price * item.quantity;
+                    const product = await this.productRepository.get(item.idProduct);
+                    if (product.width <= 0 || product.height <= 0 || product.length <= 0) throw new Error("Invalid dimensions");
+                    if (product.weight <= 0) throw new Error("Invalid weight");
+                    output.subtotal += product.price * item.quantity;
+                    if (input.from && input.to) {
+                        const freight = FreightCalculator.calculate(product);
+                        output.freight += freight * item.quantity;
+                    }
                 }
             }
-            const simulateFreight = new SimulateFreight(this.productRepository);
-            const freightOutput = await simulateFreight.execute(input);
-            output.freight = freightOutput.freight;
             output.total = output.subtotal;
             const today = input.date || new Date();
             if (input.coupon) {
