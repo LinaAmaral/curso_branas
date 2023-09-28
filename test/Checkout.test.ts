@@ -11,6 +11,7 @@ import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 import Product from "../src/Product";
 import sinon from "sinon";
 import EmailGatewayConsole from "../src/EmailGatewayConsole";
+import Coupon from "../src/Coupon";
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
 
@@ -39,14 +40,8 @@ beforeEach(() => {
         }
     };
     const coupons: any = {
-        "VALE20": {
-            percentage: 20,
-            expire_date: new Date("2023-10-01T10:00:00")
-        },
-        "VALE10": {
-            percentage: 10,
-            expire_date: new Date("2022-10-01T10:00:00")
-        }
+        "VALE20": new Coupon("VALE20", 20, new Date("2023-10-01T10:00:00")),
+        "VALE10": new Coupon("VALE10", 10, new Date("2022-10-01T10:00:00")),
     }
     //ou eu passo uma versão que acessa o banco ou eu passo uma versão que retorna algo parecido com o que vem do banco
     couponRepository = {

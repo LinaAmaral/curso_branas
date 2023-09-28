@@ -8,9 +8,10 @@ export default class ValidateCoupon {
         let output = {
             isValid: false
         }
-        const couponData = await this.couponRepository.get(code)
+        const coupon = await this.couponRepository.get(code)
         const today = new Date();
-        output.isValid = (couponData && couponData.expire_date.getTime() >= today.getTime())
+        if (!coupon) return output;
+        output.isValid = coupon.isValid(today)
         return output
     }
 }

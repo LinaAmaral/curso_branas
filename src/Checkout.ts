@@ -50,9 +50,9 @@ export default class Checkout {
             output.total = output.subtotal;
             const today = input.date || new Date();
             if (input.coupon) {
-                const couponData = await this.couponRepository.get(input.coupon);
-                if (couponData && couponData.expire_date.getTime() >= today.getTime()) {
-                    output.total -= (output.total * parseFloat(couponData.percentage)) / 100;
+                const coupon = await this.couponRepository.get(input.coupon);
+                if (coupon && coupon.isValid(today)) {
+                    output.total -= coupon.calculateDiscont(output.total)
                 }
             }
             output.total += output.freight;
