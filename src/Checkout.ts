@@ -8,7 +8,7 @@ import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
 import RealClock from "./RealClock";
 import SimulateFreight from "./SimulateFreight";
-import { validate } from "./Validate";
+import { validate } from "./ValidateCpf";
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
 
@@ -38,8 +38,6 @@ export default class Checkout {
                     if (item.quantity <= 0) throw new Error("Invalid quantity");
                     if (input.items.filter((i: any) => i.idProduct === item.idProduct).length > 1) throw new Error("Duplicated item");
                     const product = await this.productRepository.get(item.idProduct);
-                    if (product.width <= 0 || product.height <= 0 || product.length <= 0) throw new Error("Invalid dimensions");
-                    if (product.weight <= 0) throw new Error("Invalid weight");
                     output.subtotal += product.price * item.quantity;
                     if (input.from && input.to) {
                         const freight = FreightCalculator.calculate(product);
