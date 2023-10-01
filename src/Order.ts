@@ -5,9 +5,11 @@ import Product from "./Product";
 export default class Order {
     cpf: Cpf;
     items: Item[];
-    constructor(readonly idOrder: string, cpf: string) {
+    code: string;
+    constructor(readonly idOrder: string, cpf: string, date: Date = new Date(), sequence: number = 1) {
         this.cpf = new Cpf(cpf);
         this.items = [];
+        this.code = `${date.getFullYear()}${new String(sequence).padStart(8, "0")}`
     }
 
     getTotal() {
