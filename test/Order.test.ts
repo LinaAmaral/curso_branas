@@ -1,6 +1,7 @@
 import Order from "../src/Order";
 import crypto from "crypto";
 import Product from "../src/Product";
+import Coupon from "../src/Coupon";
 
 test("Deve criar um pedido vazio", function () {
     const idOrder = crypto.randomUUID()
@@ -39,3 +40,14 @@ test("Deve criar um pedido e gerar um código", function () {
     const order = new Order(idOrder, cpf, new Date('2023-03-01T10:00:00'), 1)
     expect(order.code).toBe('202300000001')
 })
+
+test("Deve criar um pedido com 3 itens com desconto", function () {
+    const idOrder = crypto.randomUUID();
+    const cpf = "407.302.170-27";
+    const order = new Order(idOrder, cpf);
+    order.addItem(new Product(1, "A", 1000, 100, 30, 10, 3), 1);
+    order.addItem(new Product(2, "B", 5000, 50, 50, 50, 22), 1);
+    order.addItem(new Product(3, "C", 30, 10, 10, 10, 0.9), 3)
+    order.addCoupon(new Coupon("VALE20", 20, new Date("2023-11-01T10:00:00")));
+    expect(order.getTotal()).toBe(4872);
+});

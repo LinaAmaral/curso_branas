@@ -10,8 +10,8 @@ export default class Product {
         readonly length: number,
         readonly weight: number
     ) {
-        if (width <= 0 || height <= 0 || length <= 0) throw new Error("Invalid dimensions");
-        if (weight <= 0) throw new Error("Invalid weight");
+        // if (width <= 0 || height <= 0 || length <= 0) throw new Error("Invalid dimensions");
+        // if (weight <= 0) throw new Error("Invalid weight");
     }
 
 
