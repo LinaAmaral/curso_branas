@@ -5,12 +5,10 @@ import CouponRepository from "../src/CouponRepository";
 import GetOrder from "../src/GetOrder";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import crypto from "crypto"
-import Clock from "../src/Clock";
 import ProductRepositoryDatabase from "../src/ProductRepositoryDataBase";
 import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 import Product from "../src/Product";
 import sinon from "sinon";
-import EmailGatewayConsole from "../src/EmailGatewayConsole";
 import Coupon from "../src/Coupon";
 
 //isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
