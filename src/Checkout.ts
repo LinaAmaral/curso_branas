@@ -1,4 +1,3 @@
-import Clock from "./Clock";
 import CouponRepository from "./CouponRepository";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
 import FreightCalculator from "./FreightCalculator";
@@ -7,9 +6,7 @@ import OrderRepository from "./OrderRepository";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
-import RealClock from "./RealClock";
-import SimulateFreight from "./SimulateFreight";
-import { validate } from "./ValidateCpf";
+
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
 
@@ -23,7 +20,6 @@ export default class Checkout {
         readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
         readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
         readonly orderRepository: OrderRepository = new OrderRepositoryDatabase(),
-        // readonly clock: Clock = new RealClock(), é um pouco de mais fazer esse caminho, passarial como parametro
     ) {
     }
 
