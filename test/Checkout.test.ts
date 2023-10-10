@@ -30,9 +30,7 @@ beforeEach(() => {
     const products: any = {
         1: new Product(1, "A", 1000, 100, 30, 10, 3),
         2: new Product(2, "B", 5000, 50, 50, 50, 22),
-        3: new Product(3, "C", 30, 10, 10, 10, 0.9),
-        4: new Product(4, "D", 1000, -100, 30, 10, 3),
-        5: new Product(5, "E", 1000, 100, 30, 10, -3),
+        3: new Product(3, "C", 30, 10, 10, 10, 0.9)
     }
     productRepository = {
         async get(idProduct: number): Promise<Product> {
@@ -215,25 +213,6 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
     expect(output.total).toBe(6370);
 });
 
-test.skip("Não deve fazer um pedido se o produto tiver dimensões inválidas", async function () {
-    const input = {
-        cpf: "407.302.170-27",
-        items: [
-            { idProduct: 4, quantity: 1 }
-        ]
-    };
-    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid dimensions"));
-});
-
-test.skip("Não deve fazer um pedido se o produto tiver peso negativo", async function () {
-    const input = {
-        cpf: "407.302.170-27",
-        items: [
-            { idProduct: 5, quantity: 1 }
-        ]
-    };
-    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid weight"));
-});
 
 
 //exemplo e teste com test patters -aula 3 último vídeo
