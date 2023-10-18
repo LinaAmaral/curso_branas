@@ -229,26 +229,6 @@ test("Deve fazer um pedido com 1 item - ex. stub", async function () {
     productRepositoryStub.restore(); //volto ao estado original para não afetar outros testes
 });
 
-// test("Deve verificar se o email foi enviado usando um spy", async function () {
-//     const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves(
-//         new Product(1, 'A', 100, 1, 1, 1, 1));
-//     const emailGatewaySpy = sinon.spy(EmailGatewayConsole.prototype, "send");
-//     checkout = new Checkout();
-//     const input = {
-//         cpf: "407.302.170-27",
-//         items: [
-//             { idProduct: 1, quantity: 1 }
-//         ],
-//         email: "john.doe@gmail.com"
-//     };
-//     const output = await checkout.execute(input);
-//     expect(output.total).toBe(100);
-//     expect(emailGatewaySpy.calledOnce).toBe(true);
-//     expect(emailGatewaySpy.calledWith("Purchase Success", "...", "john.doe@gmail.com", "lina@amaral@gmail")).toBe(true);
-//     productRepositoryStub.restore();
-//     emailGatewaySpy.restore();
-// });
-
 test("Deve verificar se o email foi enviado usando um mock", async function () {
     const productRepositoryMock = sinon.mock(ProductRepositoryDatabase.prototype);
     productRepositoryMock.expects("get").once().resolves(
