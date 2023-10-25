@@ -1,17 +1,13 @@
 import axios from "axios";
 import Checkout from "../src/Checkout";
-import ProductRepository from "../src/ProductRepository";
-import CouponRepository from "../src/CouponRepository";
 import GetOrder from "../src/GetOrder";
-import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import crypto from "crypto"
 import ProductRepositoryDatabase from "../src/ProductRepositoryDataBase";
 import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 import Product from "../src/Product";
 import sinon from "sinon";
-import Coupon from "../src/Coupon";
-
-//isso é teste de integração porque me comunico com outra camada (banco), mesmo que "mock"
+import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
+import RepositoryFactory from "../src/RepositoryFactory";
 
 axios.defaults.validateStatus = function () {
     return true;
@@ -19,35 +15,12 @@ axios.defaults.validateStatus = function () {
 
 let checkout: Checkout;
 let getOrder: GetOrder;
-let orderRepository: OrderRepositoryDatabase;
-let productRepository: ProductRepository;
-let couponRepository: CouponRepository;
-
+let repositoryFactory: RepositoryFactory;
 
 beforeEach(() => {
-    const products: any = {
-        1: new Product(1, "A", 1000, 100, 30, 10, 3),
-        2: new Product(2, "B", 5000, 50, 50, 50, 22),
-        3: new Product(3, "C", 30, 10, 10, 10, 0.9)
-    }
-    productRepository = {
-        async get(idProduct: number): Promise<Product> {
-            return products[idProduct];
-        }
-    };
-    const coupons: any = {
-        "VALE20": new Coupon("VALE20", 20, new Date("2024-10-01T10:00:00")),
-        "VALE10": new Coupon("VALE10", 10, new Date("2022-10-01T10:00:00")),
-    }
-    //ou eu passo uma versão que acessa o banco ou eu passo uma versão que retorna algo parecido com o que vem do banco
-    couponRepository = {
-        async get(code: string): Promise<any> {
-            return coupons[code];
-        }
-    };
-    checkout = new Checkout(productRepository, couponRepository);
-    orderRepository = new OrderRepositoryDatabase();
-    getOrder = new GetOrder(orderRepository);
+    repositoryFactory = new DatabaseRepositoryFactory();
+    checkout = new Checkout(repositoryFactory);
+    getOrder = new GetOrder(repositoryFactory);
 });
 
 //eu trago os testes da main pra cá, agora vou testar só a regra de negócio (Checkout), então minha api não precisar estar rodando.
@@ -87,8 +60,8 @@ test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function (
 // }
 // checkout = new Checkout(productRepository, cuponRepository, orderRepository, clock)
 test("Deve fazer um pedido com 3 itens e gerar o código do pedido", async function () {
+    const orderRepository = repositoryFactory.createOrderRepository();
     await orderRepository.clear()
-    checkout = new Checkout(productRepository, couponRepository, orderRepository);
     await checkout.execute({
         idOrder: crypto.randomUUID(),
         cpf: "407.302.170-27",
@@ -217,7 +190,6 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
 
 test("Deve fazer um pedido com 1 item - ex. stub", async function () {
     const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves(new Product(1, "A", 100, 1, 1, 1, 1));
-    checkout = new Checkout();
     const input = {
         cpf: "407.302.170-27",
         items: [
@@ -235,7 +207,6 @@ test("Deve verificar se o email foi enviado usando um mock", async function () {
         new Product(1, "A", 100, 1, 1, 1, 1)
     );
     const couponRepositorySpy = sinon.spy(CouponRepositoryDatabase.prototype, "get");
-    checkout = new Checkout();
     const input = {
         cpf: "407.302.170-27",
         items: [

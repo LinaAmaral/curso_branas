@@ -6,6 +6,7 @@ import OrderRepository from "./OrderRepository";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import ProductRepository from "./ProductRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
+import RepositoryFactory from "./RepositoryFactory";
 
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
@@ -15,12 +16,14 @@ import ProductRepositoryDatabase from "./ProductRepositoryDataBase";
 //a minha classe Checkout não tem a menor ideia de quem seja CouponRepository, então tanto faz se eu passo um mock ou se eu vou acessar o banco. Dessa forma consigo testar.
 export default class Checkout {
 
-    constructor(
-        // readonly productRepository: ProductRepository, ou eu passo assim ou deixo igual a linha de baixo que seria um new do banco como default
-        readonly productRepository: ProductRepository = new ProductRepositoryDatabase(),
-        readonly couponRepository: CouponRepository = new CouponRepositoryDatabase(),
-        readonly orderRepository: OrderRepository = new OrderRepositoryDatabase(),
-    ) {
+    orderRepository: OrderRepository;
+    productRepository: ProductRepository;
+    couponRepository: CouponRepository;
+
+    constructor(repositoryFactory: RepositoryFactory) {
+        this.orderRepository = repositoryFactory.createOrderRepository();
+        this.productRepository = repositoryFactory.createProductRepository();
+        this.couponRepository = repositoryFactory.createCouponRepository();
     }
 
     async execute(input: Input): Promise<Output> {
