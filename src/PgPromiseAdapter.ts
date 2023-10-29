@@ -2,6 +2,7 @@ import DatabaseConnection from "./DatabaseConnection";
 import pgp from "pg-promise";
 
 //Além de ser um framework and driver é um adapter
+//PgPromiseAdapter abstrai uma conexão com o banco de dados
 
 export default class PgPromiseAdapter implements DatabaseConnection {
     connection: any;
