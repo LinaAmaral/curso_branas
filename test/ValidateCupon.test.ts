@@ -1,12 +1,19 @@
 import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 import ValidateCoupon from "../src/ValidateCoupon";
 
 let validateCoupon: ValidateCoupon
+const connection = new PgPromiseAdapter();
 
-beforeEach(() => {
-    const repositoryFactory = new DatabaseRepositoryFactory()
+beforeEach(async () => {
+    connection.connect();
+    const repositoryFactory = new DatabaseRepositoryFactory(connection)
     validateCoupon = new ValidateCoupon(repositoryFactory);
 
+})
+
+afterEach(async () => {
+    await connection.close();
 })
 test("Deve validar o cupon de desconto", async function () {
     const input = "VALE20";

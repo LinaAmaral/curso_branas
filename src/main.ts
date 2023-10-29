@@ -1,10 +1,15 @@
 import express, { Request, Response } from "express";
 import Checkout from "./Checkout";
 import DatabaseRepositoryFactory from "./DatabaseRepositoryFactory";
+import PgPromiseAdapter from "./PgPromiseAdapter";
 const app = express();
 app.use(express.json());
+
+const connection = new PgPromiseAdapter();
+connection.connect();
+const repositoryFactory = new DatabaseRepositoryFactory(connection)
+
 app.post("/checkout", async function (req: Request, res: Response) {
-    const repositoryFactory = new DatabaseRepositoryFactory()
     const checkout = new Checkout(repositoryFactory);
     try {
         const output = await checkout.execute(req.body);

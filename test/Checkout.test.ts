@@ -8,6 +8,7 @@ import Product from "../src/Product";
 import sinon from "sinon";
 import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
 import RepositoryFactory from "../src/RepositoryFactory";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 axios.defaults.validateStatus = function () {
     return true;
@@ -16,12 +17,18 @@ axios.defaults.validateStatus = function () {
 let checkout: Checkout;
 let getOrder: GetOrder;
 let repositoryFactory: RepositoryFactory;
+const connection = new PgPromiseAdapter();
 
 beforeEach(() => {
-    repositoryFactory = new DatabaseRepositoryFactory();
+    connection.connect();
+    repositoryFactory = new DatabaseRepositoryFactory(connection);
     checkout = new Checkout(repositoryFactory);
     getOrder = new GetOrder(repositoryFactory);
 });
+
+afterEach(async () => {
+    await connection.close();
+})
 
 //eu trago os testes da main pra cá, agora vou testar só a regra de negócio (Checkout), então minha api não precisar estar rodando.
 //Ajusto o expect 
@@ -31,7 +38,7 @@ test("Não deve criar pedido com cpf inválido", async function () {
         cpf: "406.302.170-27",
         items: []
     };
-    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid cpf"));
+    await expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid cpf"));
 });
 
 test("Deve fazer um pedido com 3 itens e obter o pedido salvo", async function () {
@@ -139,7 +146,7 @@ test("Não deve fazer um pedido com quantidade negativa de item", async function
             { idProduct: 1, quantity: -1 }
         ]
     };
-    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid quantity"));
+    await expect(() => checkout.execute(input)).rejects.toThrow(new Error("Invalid quantity"));
 });
 
 test("Não deve fazer um pedido com item duplicado", async function () {
@@ -150,7 +157,7 @@ test("Não deve fazer um pedido com item duplicado", async function () {
             { idProduct: 1, quantity: 1 }
         ]
     };
-    expect(() => checkout.execute(input)).rejects.toThrow(new Error("Duplicated item"));
+    await expect(() => checkout.execute(input)).rejects.toThrow(new Error("Duplicated item"));
 });
 
 test("Deve fazer um pedido com 3 itens calculando o frete", async function () {
