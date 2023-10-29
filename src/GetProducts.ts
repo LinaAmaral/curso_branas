@@ -1,10 +1,11 @@
+import Presenter from "./Presenter";
 import ProductRepository from "./ProductRepository";
 import RepositoryFactory from "./RepositoryFactory";
 
 export default class GetProducts {
     productRepository: ProductRepository
 
-    constructor(repositoryFactory: RepositoryFactory) {
+    constructor(repositoryFactory: RepositoryFactory, readonly presenter: Presenter) {
         this.productRepository = repositoryFactory.createProductRepository();
     }
 
@@ -19,7 +20,7 @@ export default class GetProducts {
                 price: product.price
             });
         }
-        return output;
+        return this.presenter.present(output);
     }
 }
 

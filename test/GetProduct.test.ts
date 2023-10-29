@@ -1,5 +1,6 @@
 import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
 import GetProducts from "../src/GetProducts";
+import JsonPresenter from "../src/JsonPresenter";
 import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 test("Deve listar todos os produtos", async function () {
@@ -9,7 +10,7 @@ test("Deve listar todos os produtos", async function () {
     //interface adapter
     const repositoryFactory = new DatabaseRepositoryFactory(connection)
     //use case - aplication
-    const getProducts = new GetProducts(repositoryFactory);
+    const getProducts = new GetProducts(repositoryFactory, new JsonPresenter());
     const output = await getProducts.execute();
     expect(output).toHaveLength(3)
 

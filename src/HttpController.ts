@@ -1,12 +1,21 @@
-import Checkout from "./Checkout";
 import HttpServer from "./HttpServer";
+import UseCaseFactory from "./UsecaseFactory";
 
 // é um interface adapter que disponibilizou um ponto de conexão
 export default class HttpController {
-    constructor(readonly httpServer: HttpServer, readonly checkout: Checkout) {
+    constructor(httpServer: HttpServer, usecaseFactory: UseCaseFactory) {
+
         httpServer.on("post", "/checkout", async function (params: any, body: any) {
+            const checkout = usecaseFactory.createCheckout()
             return await checkout.execute(body)
         })
+
+        httpServer.on("get", "/products", async function (params: any, body: any, headers: any) {
+            const contentType = headers["content-type"] || "application/json";
+            const getProducts = usecaseFactory.createGetProducts(contentType);
+            const output = await getProducts.execute();
+            return output;
+        });
     }
 }
 

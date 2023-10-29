@@ -131,3 +131,28 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
     expect(output.freight).toBe(280);
     expect(output.total).toBe(6370);
 });
+
+test("Deve listar os produtos em json", async function () {
+    const response = await axios({
+        url: "http://localhost:3000/products",
+        headers: {
+            "content-type": "application/json"
+        }
+    });
+    const output = response.data;
+    expect(output).toHaveLength(3);
+    expect(output.at(0)?.idProduct).toBe(1);
+    expect(output.at(1)?.idProduct).toBe(2);
+    expect(output.at(2)?.idProduct).toBe(3);
+});
+
+test("Deve listar os produtos em csv", async function () {
+    const response = await axios({
+        url: "http://localhost:3000/products",
+        headers: {
+            "content-type": "text/csv"
+        }
+    });
+    const output = response.data;
+    expect(output).toBe("1;A;1000\n2;B;5000\n3;C;30");
+});
