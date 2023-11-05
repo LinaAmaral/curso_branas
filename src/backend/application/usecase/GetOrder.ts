@@ -1,5 +1,5 @@
 import OrderRepository from "../repository/OrderRepository";
-import RepositoryFactory from "../../RepositoryFactory";
+import RepositoryFactory from "../../application/factory/RepositoryFactory";
 
 export default class GetOrder {
     orderRepository: OrderRepository

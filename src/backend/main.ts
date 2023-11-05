@@ -1,9 +1,8 @@
-import Checkout from "./Checkout";
-import DatabaseRepositoryFactory from "./DatabaseRepositoryFactory";
-import ExpressAdapter from "./ExpressAdapter";
-import HttpController from "./HttpController";
-import PgPromiseAdapter from "./PgPromiseAdapter";
-import UseCaseFactory from "./UsecaseFactory";
+import DatabaseRepositoryFactory from "./infra/factory/DatabaseRepositoryFactory";
+import ExpressAdapter from "./infra/http/ExpressAdapter";
+import HttpController from "./infra/http/HttpController";
+import PgPromiseAdapter from "./infra/database/PgPromiseAdapter";
+import UseCaseFactory from "./infra/factory/UsecaseFactory";
 
 const connection = new PgPromiseAdapter();
 connection.connect();

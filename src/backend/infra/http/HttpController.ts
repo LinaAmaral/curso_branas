@@ -1,5 +1,5 @@
 import HttpServer from "./HttpServer";
-import UseCaseFactory from "../../UsecaseFactory";
+import UseCaseFactory from "../factory/UsecaseFactory";
 
 // é um interface adapter que disponibilizou um ponto de conexão
 export default class HttpController {

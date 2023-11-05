@@ -1,4 +1,4 @@
-import Presenter from "../../Presenter";
+import Presenter from "./Presenter";
 
 export default class CsvPresenter implements Presenter {
     present(data: any) {

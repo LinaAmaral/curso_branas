@@ -1,9 +1,9 @@
 import CouponRepository from "../repository/CouponRepository";
-import FreightCalculator from "../../FreightCalculator";
-import Order from "../../Order";
-import OrderRepository from "../../OrderRepository";
-import ProductRepository from "../../ProductRepository";
-import RepositoryFactory from "../../RepositoryFactory";
+import FreightCalculator from "../../domain/entity/FreightCalculator";
+import Order from "../../domain/entity/Order";
+import OrderRepository from "../../application/repository/OrderRepository";
+import ProductRepository from "../../application/repository/ProductRepository";
+import RepositoryFactory from "../../application/factory/RepositoryFactory";
 
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades

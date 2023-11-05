@@ -1,6 +1,6 @@
 import Presenter from "../../infra/presenter/Presenter";
-import ProductRepository from "../../ProductRepository";
-import RepositoryFactory from "../../RepositoryFactory";
+import ProductRepository from "../../application/repository/ProductRepository";
+import RepositoryFactory from "../../application/factory/RepositoryFactory";
 
 export default class GetProducts {
     productRepository: ProductRepository

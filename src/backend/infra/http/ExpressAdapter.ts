@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import HttpServer from "../../HttpServer";
+import HttpServer from "./HttpServer";
 
 export default class ExpressAdapter implements HttpServer {
     app: any;

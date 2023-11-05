@@ -1,7 +1,7 @@
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
 import Item from "./Item";
-import Product from "../../Product";
+import Product from "./Product";
 
 export default class Order {
     cpf: Cpf;
