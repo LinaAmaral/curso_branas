@@ -1,7 +1,7 @@
-import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
-import GetProducts from "../src/GetProducts";
-import JsonPresenter from "../src/JsonPresenter";
-import PgPromiseAdapter from "../src/PgPromiseAdapter";
+import DatabaseRepositoryFactory from "../../src/backend/infra/factory/DatabaseRepositoryFactory";
+import GetProducts from "../../src/backend/application/usecase/GetProducts";
+import JsonPresenter from "../../src/backend/infra/presenter/JsonPresenter";
+import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
 
 test("Deve listar todos os produtos", async function () {
     //framework and driver

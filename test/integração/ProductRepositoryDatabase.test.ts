@@ -1,5 +1,5 @@
-import PgPromiseAdapter from "../src/PgPromiseAdapter";
-import ProductRepositoryDatabase from "../src/ProductRepositoryDataBase"
+import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
+import ProductRepositoryDatabase from "../../src/backend/infra/repository/ProductRepositoryDataBase"
 
 test("Deve obter um produto do banco de dados", async function () {
     const connection = new PgPromiseAdapter();

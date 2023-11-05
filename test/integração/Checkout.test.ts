@@ -1,14 +1,14 @@
 import axios from "axios";
-import Checkout from "../src/Checkout";
-import GetOrder from "../src/GetOrder";
+import Checkout from "../../src/backend/application/usecase/Checkout";
+import GetOrder from "../../src/backend/application/usecase/GetOrder";
 import crypto from "crypto"
-import ProductRepositoryDatabase from "../src/ProductRepositoryDataBase";
-import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
-import Product from "../src/Product";
+import ProductRepositoryDatabase from "../../src/backend/infra/repository/ProductRepositoryDataBase";
+import CouponRepositoryDatabase from "../../src/backend/infra/repository/CouponRepositoryDatabase";
+import Product from "../../src/backend/domain/entity/Product";
 import sinon from "sinon";
-import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
-import RepositoryFactory from "../src/RepositoryFactory";
-import PgPromiseAdapter from "../src/PgPromiseAdapter";
+import DatabaseRepositoryFactory from "../../src/backend/infra/factory/DatabaseRepositoryFactory";
+import RepositoryFactory from "../../src/backend/application/factory/RepositoryFactory";
+import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
 
 axios.defaults.validateStatus = function () {
     return true;

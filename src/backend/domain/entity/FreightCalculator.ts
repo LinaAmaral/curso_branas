@@ -1,7 +1,7 @@
-import Product from "../../Product";
-
+import Product from "./Product";
 
 //É uma entidade (regra de negócio independente)
+
 
 export default class FreightCalculator {
     static calculate(product: Product) {
