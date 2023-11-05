@@ -1,8 +1,8 @@
-import Ride from "../../src/Uber/Ride";
-import NormalFareCalculatorHandler from "../../src/Uber/Handlers/NormalFareCalculatorHandler";
-import SundayFareCalculatorHandler from "../../src/Uber/Handlers/SundayFareCalculatorHandler";
-import OvernightSundayFareCalculatorHandler from "../../src/Uber/Handlers/OvernightSundayFareCalculatorHandler";
-import OvernightFareCalculatorHandler from "../../src/Uber/Handlers/OvernightFareCalculatorHandler";
+import Ride from "../application/Ride";
+import NormalFareCalculatorHandler from "../application/Handlers/NormalFareCalculatorHandler";
+import SundayFareCalculatorHandler from "../application/Handlers/SundayFareCalculatorHandler";
+import OvernightSundayFareCalculatorHandler from "../application/Handlers/OvernightSundayFareCalculatorHandler";
+import OvernightFareCalculatorHandler from "../application/Handlers/OvernightFareCalculatorHandler";
 
 let ride: Ride;
 beforeEach(() => {

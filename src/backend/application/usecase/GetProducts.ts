@@ -3,15 +3,14 @@ import ProductRepository from "../../application/repository/ProductRepository";
 import RepositoryFactory from "../../application/factory/RepositoryFactory";
 
 export default class GetProducts {
-    productRepository: ProductRepository
+    productRepository: ProductRepository;
 
     constructor(repositoryFactory: RepositoryFactory, readonly presenter: Presenter) {
         this.productRepository = repositoryFactory.createProductRepository();
     }
 
-    async execute(): Promise<Output[]> {
-        const products = await this.productRepository.list()
-
+    async execute(): Promise<any> {
+        const products = await this.productRepository.list();
         const output: Output[] = [];
         for (const product of products) {
             output.push({

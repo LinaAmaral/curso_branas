@@ -1,4 +1,4 @@
-import { calculateRide } from "../../src/Uber/main";
+import { calculateRide } from "../application/main";
 
 test("Deve calcular a tarifa de uma corrida em um dia normal", function () {
     const input = [
