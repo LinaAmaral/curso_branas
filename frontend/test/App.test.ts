@@ -16,9 +16,9 @@ test("Deve testar tudo", async function () {
     const checkoutGateway: CheckoutGateway = {
         async getProducts(): Promise<any> {
             return [
-                { idProduct: 1, description: "A", price: 1000 },
-                { idProduct: 2, description: "B", price: 5000 },
-                { idProduct: 3, description: "C", price: 30 },
+                { idProduct: 1, description: 'A', price: 1000 },
+                { idProduct: 2, description: 'B', price: 5000 },
+                { idProduct: 3, description: 'C', price: 30 },
             ]
         },
         async checkout(): Promise<any> {
@@ -29,7 +29,7 @@ test("Deve testar tudo", async function () {
     const wrapper = mount(AppVue, {
         global: {
             provide: {
-                "checkoutGateway": checkoutGateway //httpCheckoutGateway
+                "checkoutGateway": httpCheckoutGateway
             }
         }
     })
