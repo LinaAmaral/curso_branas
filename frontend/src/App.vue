@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
-import axios from "axios";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
+import CheckoutGateway from "./gateway/CheckoutGateway";
 
 const products: any = ref([])
 const total = ref(0)
@@ -22,15 +22,14 @@ function addItem(product: any) {
   total.value += product.price
 }
 
-async function checkout() {
-  const response = await axios.post("http://localhost:3000/checkout", order.value)
-  success.value = response.data
-}
+const checkoutGateway = inject("checkoutGateway") as CheckoutGateway
 
 onMounted(async () => {
-  const response = await axios.get("http://localhost:3000/products");
-  products.value = response.data;
-})
+  products.value = await checkoutGateway.getProducts();
+});
+async function checkout() {
+  success.value = await checkoutGateway.checkout(order.value);
+}
 
 </script>
 
