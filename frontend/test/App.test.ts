@@ -25,11 +25,11 @@ test("Deve testar tudo", async function () {
             return { freight: 0, total: 6090 }
         }
     }
-
+    const httpCheckoutGateway = new HttpCheckoutGateway()
     const wrapper = mount(AppVue, {
         global: {
             provide: {
-                "checkoutGateway": checkoutGateway
+                "checkoutGateway": checkoutGateway //httpCheckoutGateway
             }
         }
     })
