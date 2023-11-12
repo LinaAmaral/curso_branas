@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import AppVue from '../src/App.vue';
 import HttpCheckoutGateway from '../src/gateway/HttpCheckoutGateway';
+import CheckoutGateway from '../src/gateway/CheckoutGateway';
 
 async function sleep(time: number) {
     return new Promise(resolve => {
@@ -12,10 +13,23 @@ async function sleep(time: number) {
 
 
 test("Deve testar tudo", async function () {
+    const checkoutGateway: CheckoutGateway = {
+        async getProducts(): Promise<any> {
+            return [
+                { idProduct: 1, description: "A", price: 1000 },
+                { idProduct: 2, description: "B", price: 5000 },
+                { idProduct: 3, description: "C", price: 30 },
+            ]
+        },
+        async checkout(): Promise<any> {
+            return { freight: 0, total: 6090 }
+        }
+    }
+
     const wrapper = mount(AppVue, {
         global: {
             provide: {
-                "checkoutGateway": new HttpCheckoutGateway()
+                "checkoutGateway": checkoutGateway
             }
         }
     })
