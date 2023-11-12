@@ -1,11 +1,14 @@
-import axios from 'axios';
 import CheckoutGateway from './CheckoutGateway'
 import Product from '../entity/Product';
+import Order from '../entity/Order';
+import HttpClient from '../http/HttpClient';
 
 export default class HttpCheckoutGateway implements CheckoutGateway {
+
+    constructor(readonly httpClient: HttpClient) { }
+
     async getProducts(): Promise<any> {
-        const response = await axios.get("http://localhost:3000/products");
-        const productsData = response.data;
+        const productsData = await this.httpClient.get("http://localhost:3000/products");
         const products: Product[] = []
         for (const product of productsData) {
             products.push(new Product(product.idProduct, product.description, product.price))
@@ -14,8 +17,7 @@ export default class HttpCheckoutGateway implements CheckoutGateway {
 
     }
     async checkout(order: Order): Promise<any> {
-        const response = await axios.post("http://localhost:3000/checkout", order)
-        return response.data
+        return this.httpClient.post("http://localhost:3000/checkout", order)
     }
 
 }

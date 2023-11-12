@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 import AppVue from '../src/App.vue';
 import HttpCheckoutGateway from '../src/gateway/HttpCheckoutGateway';
 import CheckoutGateway from '../src/gateway/CheckoutGateway';
+import AxiosAdapter from '../src/http/AxiosAdapter';
 
 async function sleep(time: number) {
     return new Promise(resolve => {
@@ -25,7 +26,8 @@ test("Deve testar tudo", async function () {
             return { freight: 0, total: 6090 }
         }
     }
-    const httpCheckoutGateway = new HttpCheckoutGateway()
+    const httpClient = new AxiosAdapter()
+    const httpCheckoutGateway = new HttpCheckoutGateway(httpClient)
     const wrapper = mount(AppVue, {
         global: {
             provide: {
