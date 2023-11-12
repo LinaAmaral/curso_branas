@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
+import HttpCheckoutGateway from './gateway/HttpCheckoutGateway';
 
-createApp(App).mount('#app')
+const app = createApp(App);
+app.provide("checkoutGateway", new HttpCheckoutGateway)
+app.mount('#app')

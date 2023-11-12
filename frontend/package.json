@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest --dom"
   },
   "dependencies": {
     "@vue/test-utils": "^2.4.1",
+    "axios": "^1.6.1",
     "happy-dom": "^12.10.3",
     "vitest": "^0.34.6",
     "vue": "^3.3.4"
