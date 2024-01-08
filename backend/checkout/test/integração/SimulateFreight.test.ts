@@ -1,6 +1,6 @@
-import DatabaseRepositoryFactory from "../../src/backend/infra/factory/DatabaseRepositoryFactory";
-import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
-import SimulateFreight from "../../src/backend/application/usecase/SimulateFreight";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
+import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
+import SimulateFreight from "../../src/application/usecase/SimulateFreight";
 
 test("Deve simular o frete", async function () {
     const input = {

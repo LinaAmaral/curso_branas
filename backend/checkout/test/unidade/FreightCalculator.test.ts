@@ -1,5 +1,5 @@
-import FreightCalculator from "../../src/backend/domain/entity/FreightCalculator";
-import Product from "../../src/backend/domain/entity/Product";
+import FreightCalculator from "../../src/domain/entity/FreightCalculator";
+import Product from "../../src/domain/entity/Product";
 
 //teste de unidade, todo teste que testa uma unidade é teste de unidade
 test("Deve calcular o frete", function () {

@@ -1,14 +1,14 @@
 import axios from "axios";
-import Checkout from "../../src/backend/application/usecase/Checkout";
-import GetOrder from "../../src/backend/application/usecase/GetOrder";
+import Checkout from "../../src/application/usecase/Checkout";
+import GetOrder from "../../src/application/usecase/GetOrder";
 import crypto from "crypto"
-import ProductRepositoryDatabase from "../../src/backend/infra/repository/ProductRepositoryDataBase";
-import CouponRepositoryDatabase from "../../src/backend/infra/repository/CouponRepositoryDatabase";
-import Product from "../../src/backend/domain/entity/Product";
+import ProductRepositoryDatabase from "../../src/infra/repository/ProductRepositoryDataBase";
+import CouponRepositoryDatabase from "../../src/infra/repository/CouponRepositoryDatabase";
+import Product from "../../src/domain/entity/Product";
 import sinon from "sinon";
-import DatabaseRepositoryFactory from "../../src/backend/infra/factory/DatabaseRepositoryFactory";
-import RepositoryFactory from "../../src/backend/application/factory/RepositoryFactory";
-import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
+import RepositoryFactory from "../../src/application/factory/RepositoryFactory";
+import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
 
 axios.defaults.validateStatus = function () {
     return true;

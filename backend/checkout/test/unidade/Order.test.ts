@@ -1,7 +1,7 @@
-import Order from "../../src/backend/domain/entity/Order";
+import Order from "../../src/domain/entity/Order";
 import crypto from "crypto";
-import Product from "../../src/backend/domain/entity/Product";
-import Coupon from "../../src/backend/domain/entity/Coupon";
+import Product from "../../src/domain/entity/Product";
+import Coupon from "../../src/domain/entity/Coupon";
 
 test("Deve criar um pedido vazio", function () {
     const idOrder = crypto.randomUUID()

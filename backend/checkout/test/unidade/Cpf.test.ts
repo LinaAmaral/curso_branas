@@ -1,4 +1,4 @@
-import Cpf from "../../src/backend/domain/entity/Cpf";
+import Cpf from "../../src/domain/entity/Cpf";
 
 
 const CPF_VALIDO = ["09397879626", "20129841005", "025.787.610-35"];

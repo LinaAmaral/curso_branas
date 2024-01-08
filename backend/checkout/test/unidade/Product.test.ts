@@ -1,4 +1,4 @@
-import Product from "../../src/backend/domain/entity/Product"
+import Product from "../../src/domain/entity/Product"
 
 
 //Testa a unidade

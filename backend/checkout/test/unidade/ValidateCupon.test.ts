@@ -1,6 +1,6 @@
-import DatabaseRepositoryFactory from "../../src/backend/infra/factory/DatabaseRepositoryFactory";
-import PgPromiseAdapter from "../../src/backend/infra/database/PgPromiseAdapter";
-import ValidateCoupon from "../../src/backend/domain/entity/ValidateCoupon";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
+import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
+import ValidateCoupon from "../../src/domain/entity/ValidateCoupon";
 
 let validateCoupon: ValidateCoupon
 const connection = new PgPromiseAdapter();
