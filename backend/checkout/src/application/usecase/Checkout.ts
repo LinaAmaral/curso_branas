@@ -1,5 +1,4 @@
 import CouponRepository from "../repository/CouponRepository";
-import FreightCalculator from "../../domain/entity/FreightCalculator";
 import Order from "../../domain/entity/Order";
 import OrderRepository from "../../application/repository/OrderRepository";
 import ProductRepository from "../../application/repository/ProductRepository";
