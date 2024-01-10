@@ -12,6 +12,6 @@ const usecaseFactory = new UseCaseFactory(repositoryFactory)
 
 const httpServer = new ExpressAdapter();
 new HttpController(httpServer, usecaseFactory)
-httpServer.listen(3000)
+httpServer.listen(3002)
 
 

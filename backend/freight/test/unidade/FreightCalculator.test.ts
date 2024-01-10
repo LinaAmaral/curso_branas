@@ -1,15 +1,11 @@
 import FreightCalculator from "../../src/domain/entity/FreightCalculator";
-import Product from "../../src/domain/entity/Product";
 
-//teste de unidade, todo teste que testa uma unidade é teste de unidade
 test("Deve calcular o frete", function () {
-    const product = new Product(1, "A", 1000, 100, 30, 10, 3);
-    const freight = FreightCalculator.calculate(product);
+    const freight = FreightCalculator.calculate(1000, 0.03, 100);
     expect(freight).toBe(30);
-})
+});
 
-test("Deve calcular o frete mínimo", function () {
-    const product = new Product(1, "A", 1000, 10, 10, 10, 0.9);
-    const freight = FreightCalculator.calculate(product);
+test("Deve calcular o frete com frete mínimo", function () {
+    const freight = FreightCalculator.calculate(1000, 0.01, 100);
     expect(freight).toBe(10);
-})
+});
