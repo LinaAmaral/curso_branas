@@ -9,6 +9,9 @@ import sinon from "sinon";
 import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
 import RepositoryFactory from "../../src/application/factory/RepositoryFactory";
 import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
+import AxiosAdapter from "../../src/infra/http/AxiosAdapter";
+import GatewayHttpClient from "../../src/infra/factory/GatewayHttpClient";
+import CatalogHttpGateway from "../../src/infra/gateway/CatalogHttpGateway";
 
 axios.defaults.validateStatus = function () {
     return true;
@@ -22,7 +25,9 @@ const connection = new PgPromiseAdapter();
 beforeEach(() => {
     connection.connect();
     repositoryFactory = new DatabaseRepositoryFactory(connection);
-    checkout = new Checkout(repositoryFactory);
+    const httpClient = new AxiosAdapter()
+    const gatewayFactory = new GatewayHttpClient(httpClient)
+    checkout = new Checkout(repositoryFactory, gatewayFactory);
     getOrder = new GetOrder(repositoryFactory);
 });
 
@@ -196,7 +201,7 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
 //exemplo e teste com test patters -aula 3 último vídeo
 
 test("Deve fazer um pedido com 1 item - ex. stub", async function () {
-    const productRepositoryStub = sinon.stub(ProductRepositoryDatabase.prototype, "get").resolves(new Product(1, "A", 100, 1, 1, 1, 1));
+    const productRepositoryStub = sinon.stub(CatalogHttpGateway.prototype, "getProduct").resolves(new Product(1, "A", 100, 1, 1, 1, 1, 0.3, 100));
     const input = {
         cpf: "407.302.170-27",
         items: [
@@ -209,8 +214,8 @@ test("Deve fazer um pedido com 1 item - ex. stub", async function () {
 });
 
 test("Deve verificar se o email foi enviado usando um mock", async function () {
-    const productRepositoryMock = sinon.mock(ProductRepositoryDatabase.prototype);
-    productRepositoryMock.expects("get").once().resolves(
+    const productRepositoryMock = sinon.mock(CatalogHttpGateway.prototype);
+    productRepositoryMock.expects("getProduct").once().resolves(
         new Product(1, "A", 100, 1, 1, 1, 1)
     );
     const couponRepositorySpy = sinon.spy(CouponRepositoryDatabase.prototype, "get");
