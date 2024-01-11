@@ -6,8 +6,8 @@ import ZipCodeRepository from "../repository/ProductRepository";
 export default class SimulateFreight {
     zipCodeRepository: ZipCodeRepository
 
-    constructor(repositoryFactory: RepositoryFactory) {
-        this.zipCodeRepository = repositoryFactory.createZipCodeRepository()
+    constructor(repositoryFactory: RepositoryFactory) {//recebe uma fábrica de repositórios
+        this.zipCodeRepository = repositoryFactory.createZipCodeRepository()//pega dessa fábrica o que ele precisa usar
     }
 
     async execute(input: Input): Promise<Output> {

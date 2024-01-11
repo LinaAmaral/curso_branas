@@ -173,11 +173,11 @@ test("Deve fazer um pedido com 3 itens calculando o frete", async function () {
             { idProduct: 2, quantity: 1 }
         ],
         from: "88015600",
-        to: "22030060"
+        to: "22060030"
     };
     const output = await checkout.execute(input);
-    expect(output.freight).toBe(250);
-    expect(output.total).toBe(6250);
+    expect(output.freight).toBe(187.05544450204079);
+    expect(output.total).toBe(6187.055444502041);
 });
 
 test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", async function () {
@@ -189,7 +189,7 @@ test("Deve fazer um pedido com 3 itens calculando o frete com preço mínimo", a
             { idProduct: 3, quantity: 3 }
         ],
         from: "88015600",
-        to: "22030060"
+        to: "22030060"//caso em que o frete não está salvo no banco, daí o microsserviço pega a distância 1000
     };
     const output = await checkout.execute(input);
     expect(output.freight).toBe(280);

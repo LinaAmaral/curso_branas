@@ -11,4 +11,6 @@ export default class HttpController {
 
     }
 }
+//no controller a fabrica fabrcia uma instancia de um use case
 
+//esse meu controller trabalha com o método http, então preciso passar um servidor http, faço isso na instanciação

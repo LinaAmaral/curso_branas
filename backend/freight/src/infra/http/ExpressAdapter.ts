@@ -29,3 +29,5 @@ export default class ExpressAdapter implements HttpServer {
     }
 
 }
+
+//estou usando o express como servidor http
