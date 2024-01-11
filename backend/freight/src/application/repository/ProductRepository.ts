@@ -1,6 +1,5 @@
-import Product from "../../domain/entity/Product";
+import ZipCode from "../../domain/entity/ZipCode";
 
-export default interface ProductRepository {
-    get(idProduct: number): Promise<Product>;
-    list(): Promise<Product[]>
+export default interface ZipCodeRepository {
+    get(code: string): Promise<ZipCode | undefined>;
 }
