@@ -10,7 +10,7 @@ export default class Login {
         const passaword = pbkdf2Sync(input.password, user.salt, 64, 100, 'sha512').toString("hex")
         if (user.password === passaword) {
             const expiresIn = 1000000;
-            const token = sign({ email: user.email, iat: input.date.getTime(), expiresIn }, "secret")
+            const token = sign({ email: user.email.value, iat: input.date.getTime(), expiresIn }, "secret")
             return { token }
 
         } else {
