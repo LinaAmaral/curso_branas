@@ -1,6 +1,7 @@
 import { sign } from 'jsonwebtoken'
 import User from './User';
 
+//Doman service: faz parte do domínio gerar um token, então ele é um serviço de domínio
 export default class TokenGenerator {
     EXPIRES_IN = 1000000;
 
