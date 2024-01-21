@@ -16,3 +16,5 @@ export default class DistanceCalculator {
         return dist;
     }
 }
+
+//quando estou lidando com duas objetos de domínio, em geral pe um doman service que é responsável pela regra de negócio

@@ -7,3 +7,6 @@ export default class ZipCode {
         this.coord = new Coord(lat, long)
     }
 }
+
+//zipcode é uma entidade pq é unico, tem uma identidade, o cep é único.
+//é um aggregate root
