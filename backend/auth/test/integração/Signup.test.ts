@@ -9,8 +9,8 @@ test("Deve fazer um sign up", async function () {
     const userRepository = new UserRepositoryDatabase(connection)
     const signup = new Signup(userRepository);
     const input = {
-        email: "maria@gmail.com",
-        password: "abc123"
+        email: "joao@gmail.com",
+        password: "abc123",
     };
     await signup.execute(input);
     const login = new Login(userRepository);
