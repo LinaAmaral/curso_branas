@@ -34,7 +34,9 @@ create table cccat11.order (
 	code text,
 	cpf text,
 	total numeric,
-	freight numeric
+	freight numeric,
+	sequence integer,
+	date timestamp
 );
 
 create table cccat11.item (
