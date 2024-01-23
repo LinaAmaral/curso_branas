@@ -1,8 +1,17 @@
 import axios from "axios";
+import crypto from 'crypto';
 
 axios.defaults.validateStatus = function () {
     return true;
 }
+
+async function sleep(time: number) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+        }, time);
+    })
+};
 
 test("Não deve criar pedido com cpf inválido", async function () {
     const input = {
@@ -155,4 +164,22 @@ test("Deve listar os produtos em csv", async function () {
     });
     const output = response.data;
     expect(output).toBe("1;A;1000\n2;B;5000\n3;C;30");
+});
+
+test("Deve fazer um pedido com 3 itens e validar a autenticação", async function () {
+    const idOrder = crypto.randomUUID()
+    const input = {
+        idOrder,
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
+        ]
+    };
+    const teste = await axios.post("http://localhost:3000/checkout", input);
+    // await sleep(200);
+    const response = await axios.get(`http://localhost:3000/orders/${idOrder}`);
+    const output = response.data;
+    expect(output.total).toBe(6090);
 });
