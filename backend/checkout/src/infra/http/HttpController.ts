@@ -16,6 +16,12 @@ export default class HttpController {
             const output = await getProducts.execute();
             return output;
         });
+
+        httpServer.on("get", "/orders/:idOrder", async function (params: any, body: any) {
+            const getOrder = usecaseFactory.createGetOrder();
+            const output = await getOrder.execute(params.req.params.idOrder);
+            return output;
+        });
     }
 }
 

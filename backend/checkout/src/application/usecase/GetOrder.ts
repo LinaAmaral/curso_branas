@@ -1,22 +1,29 @@
+import GatewayFactory from "../factory/GatewayFactory";
+import RepositoryFactory from "../factory/RepositoryFactory";
+import AuthGateway from "../gateway/AuthGateway";
 import OrderRepository from "../repository/OrderRepository";
-import RepositoryFactory from "../../application/factory/RepositoryFactory";
 
 export default class GetOrder {
-    orderRepository: OrderRepository
+    orderRepository: OrderRepository;
+    authGateway: AuthGateway;
 
-    constructor(repositoryFactory: RepositoryFactory) {
-        this.orderRepository = repositoryFactory.createOrderRepository()
+    constructor(repositoryFactory: RepositoryFactory,
+        gatewayFactory: GatewayFactory
+    ) {
+        this.orderRepository = repositoryFactory.createOrderRepository();
+        this.authGateway = gatewayFactory.createAuthGateway();
     }
 
     async execute(idOrder: string): Promise<Output> {
-        const orderData = await this.orderRepository.get(idOrder);
-        orderData.total = parseFloat(orderData.total);
-        orderData.freight = parseFloat(orderData.freight);
-        return orderData;
+        const order = await this.orderRepository.get(idOrder);
+        return {
+            code: order.code,
+            total: order.getTotal()
+        };
     }
 }
 
 type Output = {
-    code: string
+    code: string,
     total: number
 }

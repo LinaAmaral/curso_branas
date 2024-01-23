@@ -4,6 +4,7 @@ import GetProducts from "../../application/usecase/GetProducts";
 import JsonPresenter from "../presenter/JsonPresenter";
 import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import GatewayFactory from "../../application/factory/GatewayFactory";
+import GetOrder from "../../application/usecase/GetOrder";
 
 export default class UseCaseFactory {
     constructor(
@@ -25,5 +26,11 @@ export default class UseCaseFactory {
         }
         if (!presenter) throw new Error("Invalid type");
         return new GetProducts(this.repositoryFactory, presenter);
+    }
+
+    createGetOrder() {
+        return new GetOrder(this.repositoryFactory,
+            this.gatewayFactory
+        );
     }
 }
