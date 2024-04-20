@@ -7,6 +7,7 @@ import GatewayFactory from "../factory/GatewayFactory";
 import CatalogGateway from "../gateway/CatalogGateway";
 import FreightGateway from "../gateway/FreightGateway";
 import AuthGateway from "../gateway/AuthGateway";
+import Usecase from "./Usecase";
 
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
@@ -14,14 +15,13 @@ import AuthGateway from "../gateway/AuthGateway";
 //camada de aplicação (regras de negócio, aquilo que é reusável) Aqui eu exponho o comportamento
 //sempre que eu dou um new eu perco a oportunidade de controlar a dependencia. Então se eu der um new ProductRepositoryDataBase() para acessar o banco na lina 23 eu vou precisar acessar um banco para testar mesmo teste.
 //a minha classe Checkout não tem a menor ideia de quem seja CouponRepository, então tanto faz se eu passo um mock ou se eu vou acessar o banco. Dessa forma consigo testar.
-export default class Checkout {
+export default class Checkout implements Usecase {
 
     orderRepository: OrderRepository;
     productRepository: ProductRepository;
     couponRepository: CouponRepository;
     catalogGateway: CatalogGateway;
     freightGateway: FreightGateway;
-    authGateway: AuthGateway;
 
     constructor(repositoryFactory: RepositoryFactory, gatewayFactory: GatewayFactory) {
         this.orderRepository = repositoryFactory.createOrderRepository();
@@ -29,19 +29,10 @@ export default class Checkout {
         this.couponRepository = repositoryFactory.createCouponRepository();
         this.catalogGateway = gatewayFactory.createCatalogGateway();
         this.freightGateway = gatewayFactory.createFreightGateway();
-        this.authGateway = gatewayFactory.createAuthGateway();
 
     }
 
     async execute(input: Input): Promise<Output> {
-
-        //só pra não quebrar
-        if (input.token) {
-            const session = await this.authGateway.verify(input.token)
-            if (!session) throw new Error("Authentication failed")
-        }
-        //Qual é um dos problemas de fazer assim? Preciso ficar replicando código em cada rota e tem caso que não tem input como o get
-
 
         const sequence = await this.orderRepository.count()
         const order = new Order(input.idOrder, input.cpf, input.date, sequence + 1)
@@ -87,7 +78,6 @@ type Input = {
     coupon?: string,
     from?: string,
     to?: string,
-    token?: string,
 }
 
 type Output = {

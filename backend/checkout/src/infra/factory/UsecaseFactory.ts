@@ -5,6 +5,7 @@ import JsonPresenter from "../presenter/JsonPresenter";
 import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import GatewayFactory from "../../application/factory/GatewayFactory";
 import GetOrder from "../../application/usecase/GetOrder";
+import AuthDecorator from "../../application/decorator/authDecorator";
 
 export default class UseCaseFactory {
     constructor(
@@ -13,8 +14,12 @@ export default class UseCaseFactory {
     ) { }
 
     createCheckout() {
-        return new Checkout(this.repositoryFactory, this.gatewayFactory)
+        return new AuthDecorator(new Checkout(this.repositoryFactory, this.gatewayFactory), this.gatewayFactory)
     }
+
+    //Poderia fazer um LogDecorator, que só dá um console log no input e envolver a linha 17
+    //O objetivo do decorator é extenter funcionalidades
+    //Aqui estou aperto para extenção e checkout está fechado para alteração
 
     createGetProducts(type: string) {
         let presenter;
