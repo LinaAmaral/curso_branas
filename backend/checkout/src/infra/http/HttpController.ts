@@ -5,7 +5,8 @@ import UseCaseFactory from "../factory/UsecaseFactory";
 export default class HttpController {
     constructor(httpServer: HttpServer, usecaseFactory: UseCaseFactory) {
 
-        httpServer.on("post", "/checkout", async function (params: any, body: any) {
+        httpServer.on("post", "/checkout", async function (params: any, body: any, headers: any) {
+            body.token = headers.token;
             const checkout = usecaseFactory.createCheckout()
             return await checkout.execute(body)
         })

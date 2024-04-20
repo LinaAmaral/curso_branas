@@ -175,9 +175,13 @@ test("Deve fazer um pedido com 3 itens e validar a autenticação", async functi
             { idProduct: 1, quantity: 1 },
             { idProduct: 2, quantity: 1 },
             { idProduct: 3, quantity: 3 }
-        ]
+        ],
     };
-    const teste = await axios.post("http://localhost:3000/checkout", input);
+    await axios.post("http://localhost:3000/checkout", input, {
+        headers: {
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjQ2MTM5NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.aHf1geyFbypi_-xreacJmHo8Fhh7c2hBdok_KCkEsG4'
+        }
+    });
     // await sleep(200);
     const response = await axios.get(`http://localhost:3000/orders/${idOrder}`);
     const output = response.data;

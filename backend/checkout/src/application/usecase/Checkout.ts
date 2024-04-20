@@ -6,6 +6,7 @@ import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import GatewayFactory from "../factory/GatewayFactory";
 import CatalogGateway from "../gateway/CatalogGateway";
 import FreightGateway from "../gateway/FreightGateway";
+import AuthGateway from "../gateway/AuthGateway";
 
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
@@ -19,7 +20,8 @@ export default class Checkout {
     productRepository: ProductRepository;
     couponRepository: CouponRepository;
     catalogGateway: CatalogGateway;
-    freightGateway: FreightGateway
+    freightGateway: FreightGateway;
+    authGateway: AuthGateway;
 
     constructor(repositoryFactory: RepositoryFactory, gatewayFactory: GatewayFactory) {
         this.orderRepository = repositoryFactory.createOrderRepository();
@@ -27,10 +29,20 @@ export default class Checkout {
         this.couponRepository = repositoryFactory.createCouponRepository();
         this.catalogGateway = gatewayFactory.createCatalogGateway();
         this.freightGateway = gatewayFactory.createFreightGateway();
+        this.authGateway = gatewayFactory.createAuthGateway();
 
     }
 
     async execute(input: Input): Promise<Output> {
+
+        //só pra não quebrar
+        if (input.token) {
+            const session = await this.authGateway.verify(input.token)
+            if (!session) throw new Error("Authentication failed")
+        }
+        //Qual é um dos problemas de fazer assim? Preciso ficar replicando código em cada rota e tem caso que não tem input como o get
+
+
         const sequence = await this.orderRepository.count()
         const order = new Order(input.idOrder, input.cpf, input.date, sequence + 1)
         const inputFreight: any = {
@@ -74,7 +86,8 @@ type Input = {
     items: { idProduct: number, quantity: number }[],
     coupon?: string,
     from?: string,
-    to?: string
+    to?: string,
+    token?: string,
 }
 
 type Output = {
