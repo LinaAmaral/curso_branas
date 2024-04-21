@@ -17,6 +17,10 @@ module.exports = {
       name: "freight",
       script: "npx ts-node ../backend/freight/src/main.ts"
     },
+    {
+      name: "stock",
+      script: "npx ts-node ../backend/stock/src/main.ts"
+    },
   ],
 
 
