@@ -5,16 +5,18 @@ import JsonPresenter from "../presenter/JsonPresenter";
 import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import GatewayFactory from "../../application/factory/GatewayFactory";
 import GetOrder from "../../application/usecase/GetOrder";
-import AuthDecorator from "../../application/decorator/authDecorator";
+import Queue from "../queue/Queue";
+import AuthDecorator from "../../application/decorator/AuthDecorator";
 
-export default class UseCaseFactory {
+export default class UsecaseFactory {
     constructor(
         readonly repositoryFactory: RepositoryFactory,
-        readonly gatewayFactory: GatewayFactory
+        readonly gatewayFactory: GatewayFactory,
+        readonly queue: Queue
     ) { }
 
     createCheckout() {
-        return new AuthDecorator(new Checkout(this.repositoryFactory, this.gatewayFactory), this.gatewayFactory)
+        return new AuthDecorator(new Checkout(this.repositoryFactory, this.gatewayFactory, this.queue), this.gatewayFactory)
     }
 
     //Poderia fazer um LogDecorator, que só dá um console log no input e envolver a linha 17

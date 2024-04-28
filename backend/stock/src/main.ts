@@ -11,9 +11,9 @@ async function main() {
 	connection.connect();
 	const repositoryFactory = new DatabaseRepositoryFactory(connection);
 	const usecaseFactory = new UsecaseFactory(repositoryFactory);
-	//const queue = new RabbitMQAdapter();
-	//await queue.connect();
-	//new QueueController(queue, usecaseFactory);
+	const queue = new RabbitMQAdapter();
+	await queue.connect();
+	new QueueController(queue, usecaseFactory);
 	const httpServer = new ExpressAdapter();
 	new HttpController(httpServer, usecaseFactory);
 	httpServer.listen(3005);

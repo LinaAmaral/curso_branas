@@ -1,9 +1,9 @@
 import HttpServer from "./HttpServer";
-import UseCaseFactory from "../factory/UsecaseFactory";
+import UsecaseFactory from "../factory/UsecaseFactory";
 
 // é um interface adapter que disponibilizou um ponto de conexão
 export default class HttpController {
-    constructor(httpServer: HttpServer, usecaseFactory: UseCaseFactory) {
+    constructor(httpServer: HttpServer, usecaseFactory: UsecaseFactory) {
 
         httpServer.on("post", "/checkout", async function (params: any, body: any, headers: any) {
             body.token = headers.token;

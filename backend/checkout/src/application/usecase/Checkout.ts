@@ -6,8 +6,8 @@ import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import GatewayFactory from "../factory/GatewayFactory";
 import CatalogGateway from "../gateway/CatalogGateway";
 import FreightGateway from "../gateway/FreightGateway";
-import AuthGateway from "../gateway/AuthGateway";
 import Usecase from "./Usecase";
+import Queue from "../../infra/queue/Queue";
 
 
 //Aqui temos um Control:Controla o fluxo de negócio. O comportamento não deve estar aqui e sim nas entidades
@@ -23,7 +23,7 @@ export default class Checkout implements Usecase {
     catalogGateway: CatalogGateway;
     freightGateway: FreightGateway;
 
-    constructor(repositoryFactory: RepositoryFactory, gatewayFactory: GatewayFactory) {
+    constructor(repositoryFactory: RepositoryFactory, gatewayFactory: GatewayFactory, readonly queue?: Queue) {
         this.orderRepository = repositoryFactory.createOrderRepository();
         this.productRepository = repositoryFactory.createProductRepository();
         this.couponRepository = repositoryFactory.createCouponRepository();
@@ -61,6 +61,10 @@ export default class Checkout implements Usecase {
             }
         }
         await this.orderRepository.save(order);
+
+        if (this.queue) {
+            await this.queue.publish("orderPlaced", order)
+        }
         return {
             freight: order.freight,
             total: order.getTotal()
