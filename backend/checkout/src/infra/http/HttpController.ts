@@ -1,14 +1,21 @@
 import HttpServer from "./HttpServer";
 import UsecaseFactory from "../factory/UsecaseFactory";
+import Queue from "../queue/Queue";
 
 // é um interface adapter que disponibilizou um ponto de conexão
 export default class HttpController {
-    constructor(httpServer: HttpServer, usecaseFactory: UsecaseFactory) {
+    constructor(httpServer: HttpServer, usecaseFactory: UsecaseFactory, queue: Queue) {
 
         httpServer.on("post", "/checkout", async function (params: any, body: any, headers: any) {
             body.token = headers.token;
             const checkout = usecaseFactory.createCheckout()
             return await checkout.execute(body)
+        })
+
+        httpServer.on("post", "/checkoutAsync", async function (params: any, body: any, headers: any) {
+            //command - desacoplo quem chama de quem é chamado
+            //api recebe um pedido e publica na fila
+            await queue.publish("checkout", body)
         })
 
         httpServer.on("get", "/products", async function (params: any, body: any, headers: any) {

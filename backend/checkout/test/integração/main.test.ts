@@ -187,3 +187,21 @@ test("Deve fazer um pedido com 3 itens e validar a autenticação", async functi
     const output = response.data;
     expect(output.total).toBe(6090);
 });
+
+test("Deve fazer um pedido com 3 itens assincrono", async function () {
+    const idOrder = crypto.randomUUID()
+    const input = {
+        idOrder,
+        cpf: "407.302.170-27",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
+        ],
+    };
+    await axios.post("http://localhost:3000/checkoutAsync", input);
+    await sleep(200);
+    const response = await axios.get(`http://localhost:3000/orders/${idOrder}`);
+    const output = response.data;
+    expect(output.total).toBe(6090);
+});
